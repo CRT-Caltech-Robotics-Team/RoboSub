@@ -34,7 +34,7 @@ void send_depth_to_pixhawk(float current_depth_cm) {
 
   // Copy to buffer and send via Serial 
   uint16_t len = mavlink_msg_to_send_buffer(buf, &msg);
-  Serial1.write(buf, len); 
+  MAVSerial.write(buf, len); 
 }
 
 void setup()
@@ -62,16 +62,17 @@ void loop()
 
     send_depth_to_pixhawk(depthMeters * 100);
 
-    Serial.print("Voltage: ");
-    Serial.print(voltage, 3);
+    // Serial.print("Voltage: ");
+    // Serial.print(voltage, 3);
 
-    Serial.print(" V, Pressure: ");
-    Serial.print(pressurePsi, 2);
+    // Serial.print(" V, Pressure: ");
+    // Serial.print(pressurePsi, 2);
 
-    Serial.print(" psi, Depth: ");
-    Serial.print(depthMeters, 2);
+    // Serial.print(" psi, Depth: ");
+    // Serial.print(depthMeters, 2);
 
-    Serial.println(" m");
+    // Serial.println(" m");
+    Serial.println(depthMeters);
 
     delay(1000);
 

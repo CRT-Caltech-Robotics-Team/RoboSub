@@ -1,3 +1,5 @@
+//Reads data from DVL and publishes velocity to /dvl/velocity and /mavros/setpoint_velocity/cmd_vel_unstamped
+
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/twist.hpp>
 #include <geometry_msgs/msg/twist_stamped.hpp>
@@ -30,7 +32,7 @@ public:
         initSerial();
         initDVL();
 
-        reader_thread_ = std::thread(&DVLNode::readLoop, this);
+        reader_thread_ = std::thread(&DVLNode::readSerial, this);
     }
 
     ~DVLNode()
@@ -117,7 +119,7 @@ private:
         RCLCPP_INFO(this->get_logger(), "DVL started");
     }
 
-    void readLoop()
+    void readSerial()
     {
         uint8_t byte;
 
