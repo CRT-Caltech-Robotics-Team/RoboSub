@@ -7,5 +7,16 @@ theme:
 
 nav:
   - Home: index.md
+  
+  - Setup:
+      - setup.md
 
+  
+  - Firmware:
+      - PDB: firmware/pdb.md
+      - BMS: firmware/bms.md
+
+  - Guidelines:
+      - guidelines.md
+      
 strict: true
