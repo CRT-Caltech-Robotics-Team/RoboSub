@@ -2,7 +2,8 @@
 
 Code base for the Caltech Robotics Team (CRT) RoboSub 2026-2027 season.
 
-Documentation: <https://crt-caltech-robotics-team.github.io/RoboSub//>
+# Docs
+<https://crt-caltech-robotics-team.github.io/RoboSub//>
 
 ## Repository Layout
 
@@ -17,21 +18,3 @@ Documentation: <https://crt-caltech-robotics-team.github.io/RoboSub//>
 ├── package.json        Repository tooling
 └── README.md           Project overview
 ```
-## Documentation
-
-Install and serve the documentation locally:
-
-```sh
-python3 -m pip install -r docs/requirements.txt
-python3 -m mkdocs serve
-```
-## Commits
-Use a short Conventional Commit subject:
-
-```text
-feat: add camera capture
-fix(control): clamp thrust output
-docs: update setup instructions
-```
-
-Scopes are optional. Pull requests check commit subjects before merge.
