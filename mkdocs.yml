@@ -1,5 +1,6 @@
 site_name: RoboSub Software
 site_description: Software documentation for the RoboSub team
+site_url: https://crt.robosub.io/
 
 theme:
   name: material

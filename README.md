@@ -2,6 +2,8 @@
 
 Code base for the Caltech Robotics Team (CRT) RoboSub 2026-2027 season.
 
+Documentation: <https://crt.robosub.io/>
+
 ## Repository Layout
 
 ```text
