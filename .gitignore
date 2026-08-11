@@ -1,0 +1,73 @@
+# Agents
+.claude/
+.codex/
+.cursor/
+.agents/
+
+# Operating systems and editors
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# C and C++
+*.a
+*.d
+*.dll
+*.dylib
+*.exe
+*.lib
+*.o
+*.obj
+*.so
+*.so.*
+CMakeCache.txt
+CMakeFiles/
+cmake-build-*/
+compile_commands.json
+
+# Rust
+target/
+**/*.rs.bk
+
+# Node.js repository tooling
+node_modules/
+npm-debug.log*
+
+# Python and MkDocs
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+site/
+
+# ROS and colcon
+build/
+install/
+log/
+.colcon/
+
+# Coverage and test output
+.cache/
+.coverage
+coverage/
+coverage.xml
+*.gcda
+*.gcno
+*.profraw
+*.profdata
+
+# Embedded toolchains
+.pio/
+*.elf
+*.hex
+*.map
+*.uf2

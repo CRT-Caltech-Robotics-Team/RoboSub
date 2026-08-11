@@ -1,0 +1,10 @@
+site_name: RoboSub Software
+site_description: Software documentation for the RoboSub team
+
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+
+strict: true
