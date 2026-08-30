@@ -97,30 +97,30 @@ private:
         RCLCPP_INFO(this->get_logger(), "Serial started");
     }
 
-    void initPixhawkCommunications()
-    {
-        serial_fd = open("/dev/ttyTHS0", O_RDWR | O_NOCTTY);
+    //void initPixhawkCommunications()
+    //{
+        //pixhawk_telem = open("/dev/ttyTHS0", O_RDWR | O_NOCTTY);
 
-        if (serial_fd < 0)
-        {
-            RCLCPP_ERROR(this->get_logger(), "Failed to open serial port");
-            throw std::runtime_error("Serial port not found");
-        }
+        //if (pixhawk_telem < 0)
+        //{
+            //RCLCPP_ERROR(this->get_logger(), "Failed to open serial port");
+            //throw std::runtime_error("Serial port not found");
+        //}
 
-        termios tty{};
-        tcgetattr(serial_fd, &tty);
+        //termios tty{};
+        //tcgetattr(pixhawk_telem, &tty);
 
-        cfsetispeed(&tty, B115200);
-        cfsetospeed(&tty, B115200);
+        //cfsetispeed(&tty, B115200);
+        //cfsetospeed(&tty, B115200);
 
-        tty.c_cflag |= (CLOCAL | CREAD);
-        tty.c_cflag &= ~CSIZE;
-        tty.c_cflag |= CS8;
+        //tty.c_cflag |= (CLOCAL | CREAD);
+        //tty.c_cflag &= ~CSIZE;
+        //tty.c_cflag |= CS8;
 
-        tcsetattr(serial_fd, TCSANOW, &tty);
+        //tcsetattr(pixhawk_telem, TCSANOW, &tty);
 
-        RCLCPP_INFO(this->get_logger(), "Serial started");
-    }
+        //RCLCPP_INFO(this->get_logger(), "Pixhawk communication started");
+    //}
 
     void sendCommand(const char *cmd)
     {
@@ -313,7 +313,7 @@ private:
         vel.linear.y = vy;
         vel.linear.z = vz;
 
-        vel_pub_->publish(vel);
+        //vel_pub_->publish(vel);
 
         //geometry_msgs::msg::TwistStamped mavros_vel;
         //mavros_vel.header.stamp = this->now();
