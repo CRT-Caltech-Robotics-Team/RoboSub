@@ -1,0 +1,13 @@
+{
+    "configuration": "default",
+    "documentId": "45f285961b23675c48e2d6f7",
+    "documentMicroversion": "07cabc17e0fa9cc59f612745",
+    "elementId": "faaf0532cdae73e616f0b7a7",
+    "fullConfiguration": "default",
+    "id": "M3K7BZ6bymrP5Lcxd",
+    "isStandardContent": false,
+    "name": "DVLAdap URDF <1>",
+    "partId": "KFHB",
+    "suppressed": false,
+    "type": "Part"
+}
