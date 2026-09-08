@@ -1,6 +1,9 @@
 #include <memory>
-#include "rclcpp/rclcpp.hpp"
-#include "geometry_msgs/msg/pose_stamped.hpp"
+#include <rclcpp/rclcpp.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
+#include <geometry_msgs/msg/twist.hpp>
+#include <geometry_msgs/msg/twist_stamped.hpp>
+#include <sensor_msgs/msg/imu.hpp>
 #include <fcntl.h>
 #include <termios.h>
 #include <unistd.h>
@@ -8,32 +11,68 @@
 #include <cstring>
 #include <thread>
 #include <mutex>
+#include "mavros_msgs/msg/state.hpp"
+#include <iostream>
+#include <chrono>
 #include "nav_msgs/msg/odometry.hpp"
 #include "sensor_msgs/msg/imu.hpp"
 #include "tf2/LinearMath/Quaternion.h"
+#include <geometry_msgs/msg/vector3.hpp>
 
-class DVLNODE : public rclcpp::Node
+
+#define BUFFER_SIZE 2048
+
+
+class PixhawkIMUNode : public rclcpp::Node
 {
 public:
-    DVLNODE() : Node("dvl_node")
+    PixhawkStateNode() : Node("pixhawk_state_node")
+    {
+        auto qos = rclcpp::QoS(rclcpp::KeepLast(10)).best_effort(); // Sensors usually run on best_effort
+
+  	pixhawk_imu_sub = this->create_subscriber<sensor_msgs::msg::Imu>("/mavros/imu/data", qos, std::bind(&PixhawkStateNode::imu_callback, this, std::placeholders::_1));
+
+    }
+
+private:
+	void imu_callback(const sensor_msgs::msg::Imu::ConstSharedPtr msg)
+	{
+		acc_x = msg->linear_acceleration.x;
+		acc_y = msg->linear_acceleration.y;
+		acc_z = msg->linear_acceleration.z;
+		
+		omega_x = msg->angular_velocity.x;
+		omega_y = msg->angular_velocity.y;
+		omega_z = msg->angular_velocity.z;
+		
+		x = msg->orientation.x
+		y = msg->orientation.y
+		z = msg->orientation.z
+		w = msg->orientation.w
+	}
+    	rclcpp::Subscription<sensor_msgs::msg::IMU>::SharedPtr imu_sub_;
+}
+
+
+class DVLNode : public rclcpp::Node
+{
+public:
+    DVLNode() : Node("dvl_node")
     {
         auto qos = rclcpp::QoS(rclcpp::KeepLast(10)).best_effort(); // Sensors usually run on best_effort
 
 
-        // 2. Create a Publisher to stream that precise sensor data straight into MAVROS
-
-        // vel_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("/dvl/velocity", 10);
-        // mavros_vel_pub_ = this->create_publisher<geometry_msgs::msg::TwistStamped>("/mavros/vision_speed/speed_twist", 10);
+  	pixhawk_imu_sub = this->create_subscriber<sensor_msgs::msg::Imu>("/mavros/imu/data", qos, std::bind(&PixhawkTelemetryNode::imu_callback, this, std::placeholders::_1));
         mavros_odom_pub_ = this->create_publisher<nav_msgs::msg::Odometry>("/mavros/odometry/out", 10);
-        imu_pub_ = this->create_publisher<sensor_msgs::msg::Imu>("/dvl/imu", 10);
+        //imu_pub_ = this->create_publisher<sensor_msgs::msg::Imu>("/dvl/imu", 10);
 
         initSerial();
         initDVL();
-        initPixhawkCommunications();
 
         reader_thread_ = std::thread(&DVLNode::readLoop, this);
     }
-        ~DVLNode()
+    
+    ~DVLNode()
     {
         running_ = false;
 
@@ -68,8 +107,40 @@ private:
     std::mutex data_mutex_;
     bool running_ = true;
 
+
+    void imu_callback(const sensor_msgs::msg::Imu::ConstSharedPtr msg)
+    {
+	acc_x = msg->linear_acceleration.x;
+	acc_y = msg->linear_acceleration.y;
+	acc_z = msg->linear_acceleration.z;
+		
+	omega_x = msg->angular_velocity.x;
+	omega_y = msg->angular_velocity.y;
+	omega_z = msg->angular_velocity.z;
+		
+	x = msg->orientation.x
+	y = msg->orientation.y
+	z = msg->orientation.z
+	w = msg->orientation.w
+    }
+    
+    double acc_x;
+    double acc_y;
+    double acc_z;
+    
+    double omega_x;
+    double omega_y;
+    double omega_z;
+    
+    double x;
+    double y;
+    double z;
+    double w;
+    
+    rclcpp::Subscription<sensor_msgs::msg::IMU>::SharedPtr imu_sub_;
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
     rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr mavros_vel_pub_;
+    rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr mavros_odom_pub_;
     rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr imu_pub_;
 
     void initSerial()
@@ -96,31 +167,6 @@ private:
 
         RCLCPP_INFO(this->get_logger(), "Serial started");
     }
-
-    //void initPixhawkCommunications()
-    //{
-        //pixhawk_telem = open("/dev/ttyTHS0", O_RDWR | O_NOCTTY);
-
-        //if (pixhawk_telem < 0)
-        //{
-            //RCLCPP_ERROR(this->get_logger(), "Failed to open serial port");
-            //throw std::runtime_error("Serial port not found");
-        //}
-
-        //termios tty{};
-        //tcgetattr(pixhawk_telem, &tty);
-
-        //cfsetispeed(&tty, B115200);
-        //cfsetospeed(&tty, B115200);
-
-        //tty.c_cflag |= (CLOCAL | CREAD);
-        //tty.c_cflag &= ~CSIZE;
-        //tty.c_cflag |= CS8;
-
-        //tcsetattr(pixhawk_telem, TCSANOW, &tty);
-
-        //RCLCPP_INFO(this->get_logger(), "Pixhawk communication started");
-    //}
 
     void sendCommand(const char *cmd)
     {
@@ -307,53 +353,62 @@ private:
         float vx = (v1 - v2) / (2 * sa);
         float vy = (v4 - v3) / (2 * sa);
         float vz = (v1 + v2 + v3 + v4) / (4 * ca);
-
-        geometry_msgs::msg::Twist vel;
-        vel.linear.x = vx;
-        vel.linear.y = vy;
-        vel.linear.z = vz;
-
-        //vel_pub_->publish(vel);
-
-        //geometry_msgs::msg::TwistStamped mavros_vel;
-        //mavros_vel.header.stamp = this->now();
-        //mavros_vel.header.frame_id = "base_link";
-        //mavros_vel.twist = vel;
-        //mavros_vel_pub_->publish(mavros_vel);
+        
+        float rx = -0.111506;
+        float ry = 0.0;
+        float rz = 0.0650748;
 
 
-        // validate this
-        nav_msgs::msg::Odometry odom_msg;
-        odom_msg.header.stamp = this->now();
-        odom_msg.header.frame_id = "odom";       
-        odom_msg.child_frame_id = "base_link";   
-        odom_msg.pose.pose.position.x = 0.0;
-        odom_msg.pose.pose.position.y = 0.0;
-        odom_msg.pose.pose.position.z = 0.0;
-        odom_msg.twist.twist.linear.x = vx;
-        odom_msg.twist.twist.linear.y = vy;
-        odom_msg.twist.twist.linear.z = vz;
-        odom_msg.twist.covariance[0]  = 0.02; 
-        odom_msg.twist.covariance[7]  = 0.02; 
-        odom_msg.twist.covariance[14] = 0.02; 
-        mavros_odom_pub_->publish(odom_msg);
-
-
-        sensor_msgs::msg::Imu imu;
-
+	Eigen::Vector3d v_dvl(vx,vy,vz); // velocity in the frame of the DVL
+	Eigen::Vector3d omega(omega_x,omega_y,omega_z);
+	Eigen::Vector3d dvl_lever_arm(rx,ry,rz);
+	
+	Eigen::Vector3d v_pixhawk = v_dvl - omega.cross(dvl_lever_arm); // velocity of the DVL in the frame of the Pixhawk
+        //geometry_msgs::msg::Twist vel;
+        //vel.linear.x = vx;
+        //vel.linear.y = vy;
+        //vel.linear.z = vz;
+	
         tf2::Quaternion q;
         q.setRPY(roll * M_PI / 180.0,
                  pitch * M_PI / 180.0,
                  heading * M_PI / 180.0);
         q.normalize();
 
-        imu.orientation.x = q.x();
-        imu.orientation.y = q.y();
-        imu.orientation.z = q.z();
-        imu.orientation.w = q.w();
+	//TODO: transform the quarternion from the DVL frame back to the frame of the Pixhawk. Update covariances using old code from the team.
+	
+        nav_msgs::msg::Odometry odom_msg;
+        odom_msg.header.stamp = this->now();
+        odom_msg.header.frame_id = "odom";       
+        odom_msg.child_frame_id = "base_link";   
+        odom_msg.pose.pose.position.x = std::nan("");
+        odom_msg.pose.pose.position.y = std::nan("");
+        odom_msg.pose.pose.position.z = std::nan("");
+        odom_msg.pose.pose.orientation.x = q.x();
+        odom_msg.pose.pose.orientation.y = q.y();
+        odom_msg.pose.pose.orientation.z = q.z();
+        odom_msg.pose.pose.orientation.w = q.w();
+        odom_msg.twist.twist.linear.x = v_pixhawk.x();
+        odom_msg.twist.twist.linear.y = v_pixhawk.y();
+        odom_msg.twist.twist.linear.z = v_pixhawk.z();
+        odom_msg.twist.covariance[0]  = 0.02; 
+        odom_msg.twist.covariance[7]  = 0.02; 
+        odom_msg.twist.covariance[14] = 0.02; 
+        mavros_odom_pub_->publish(odom_msg);
 
-        imu_pub_->publish(imu);
+
+        //sensor_msgs::msg::Imu imu;
+
+
+
+        //imu.orientation.x = q.x();
+        //imu.orientation.y = q.y();
+        //imu.orientation.z = q.z();
+        //imu.orientation.w = q.w();
+
+        //imu_pub_->publish(imu);
     }
+    
 };
 
 int main(int argc, char **argv)
@@ -362,6 +417,7 @@ int main(int argc, char **argv)
 
     try
     {
+        rclcpp::spin(std::make_shared<PixhawkStateNode>());
         rclcpp::spin(std::make_shared<DVLNode>());
     }
     catch (const std::exception &e)
