@@ -24,36 +24,6 @@
 #define BUFFER_SIZE 2048
 
 
-class PixhawkIMUNode : public rclcpp::Node
-{
-public:
-    PixhawkIMUNode() : Node("pixhawk_imu_node")
-    {
-        auto qos = rclcpp::QoS(rclcpp::KeepLast(10)).best_effort(); // Sensors usually run on best_effort
-
-  	pixhawk_imu_sub = this->create_subscription<sensor_msgs::msg::Imu>("/mavros/imu/data", qos, std::bind(&PixhawkIMUNode::imu_callback, this, std::placeholders::_1));
-
-    }
-
-private:
-	void imu_callback(const sensor_msgs::msg::Imu::ConstSharedPtr msg)
-	{
-		acc_x = msg->linear_acceleration.x;
-		acc_y = msg->linear_acceleration.y;
-		acc_z = msg->linear_acceleration.z;
-		
-		omega_x = msg->angular_velocity.x;
-		omega_y = msg->angular_velocity.y;
-		omega_z = msg->angular_velocity.z;
-		
-		x = msg->orientation.x;
-		y = msg->orientation.y;
-		z = msg->orientation.z;
-		w = msg->orientation.w;
-	}
-    	rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imu_sub_;
-};
-
 
 class DVLNode : public rclcpp::Node
 {
