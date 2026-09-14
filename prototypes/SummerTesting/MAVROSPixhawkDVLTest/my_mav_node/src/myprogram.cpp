@@ -52,7 +52,7 @@ private:
 		w = msg->orientation.w;
 	}
     	rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imu_sub_;
-}
+};
 
 
 class DVLNode : public rclcpp::Node
@@ -63,7 +63,7 @@ public:
         auto qos = rclcpp::QoS(rclcpp::KeepLast(10)).best_effort(); // Sensors usually run on best_effort
 
 
-  	pixhawk_imu_sub = this->create_subscriber<sensor_msgs::msg::Imu>("/mavros/imu/data", qos, std::bind(&PixhawkTelemetryNode::imu_callback, this, std::placeholders::_1));
+  	    imu_sub_ = this->create_subscription<sensor_msgs::msg::Imu>("/mavros/imu/data", qos, std::bind(&DVLNode::imu_callback, this, std::placeholders::_1));
         mavros_odom_pub_ = this->create_publisher<nav_msgs::msg::Odometry>("/mavros/odometry/out", 10);
         //imu_pub_ = this->create_publisher<sensor_msgs::msg::Imu>("/dvl/imu", 10);
 
