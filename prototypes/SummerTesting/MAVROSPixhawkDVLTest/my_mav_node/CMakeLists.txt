@@ -11,7 +11,9 @@ find_package(rclcpp REQUIRED)
 find_package(mavros_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
 find_package(Eigen3 REQUIRED)
 
 add_executable(myprogram src/myprogram.cpp)
@@ -24,8 +26,10 @@ ament_target_dependencies(
   "rclcpp"
   "mavros_msgs"
   "nav_msgs"
+  "sensor_msgs"
   "geometry_msgs"
   "tf2"
+  "tf2_ros"
 )
 
 target_link_libraries(
@@ -33,8 +37,38 @@ target_link_libraries(
   Eigen3::Eigen
 )
 
-install(TARGETS myprogram
+add_executable(offboard_node src/offboard_node.cpp)
+target_compile_features(offboard_node PUBLIC c_std_99 cxx_std_17)
+ament_target_dependencies(
+  offboard_node
+  "rclcpp"
+  "mavros_msgs"
+)
+
+add_executable(status_node src/status_node.cpp)
+target_compile_features(status_node PUBLIC c_std_99 cxx_std_17)
+ament_target_dependencies(
+  status_node
+  "rclcpp"
+  "mavros_msgs"
+  "sensor_msgs"
+  "geometry_msgs"
+)
+
+add_executable(thruster_check src/thruster_check.cpp)
+target_compile_features(thruster_check PUBLIC c_std_99 cxx_std_17)
+ament_target_dependencies(
+  thruster_check
+  "rclcpp"
+  "mavros_msgs"
+)
+
+install(TARGETS myprogram offboard_node status_node thruster_check
   DESTINATION lib/${PROJECT_NAME})
+
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
+  OPTIONAL)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
