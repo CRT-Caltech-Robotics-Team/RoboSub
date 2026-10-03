@@ -1,0 +1,42 @@
+{
+    "document_id": "45f285961b23675c48e2d6f7",
+    "output_format": "urdf",
+    "package_name": "my_robot_description",
+    "robot_name": "my_robot",
+    "assembly_name": "URDF Assembly",
+    "export_stl_with_meters": true,
+    "set_zero_mass_to_fixed": false,
+
+    "joint_properties": {
+        "default": {
+            "max_effort": 100.0,
+            "max_velocity": 100.0,
+        },
+        "dof_thruster1": {
+            "type": "fixed"
+        },
+        "dof_thruster2": {
+            "type": "fixed"
+        },
+        "dof_thruster3": {
+            "type": "fixed"
+        },
+        "dof_thruster4": {
+            "type": "fixed"
+        },
+        "dof_thruster5": {
+            "type": "fixed"
+        },
+        "dof_thruster6": {
+            "type": "fixed"
+        },
+        "dof_dvl": {
+            "type": "fixed"
+        },
+        "dof_pixhawk": {
+            "type": "fixed"
+        }
+    }
+}
+
+

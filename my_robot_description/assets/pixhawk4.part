@@ -1,0 +1,13 @@
+{
+    "configuration": "default",
+    "documentId": "45f285961b23675c48e2d6f7",
+    "documentMicroversion": "07cabc17e0fa9cc59f612745",
+    "elementId": "72dcef1d4e0f932c9fa68949",
+    "fullConfiguration": "default",
+    "id": "MrdIQeDlgJ8zxbsqG",
+    "isStandardContent": false,
+    "name": "Pixhawk4 <1>",
+    "partId": "JFH",
+    "suppressed": false,
+    "type": "Part"
+}
