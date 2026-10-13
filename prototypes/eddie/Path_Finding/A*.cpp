@@ -4,8 +4,8 @@
 #include <cmath>
 #include <algorithm>
 #include <limits>
-#include <SFML/Graphics.hpp>
 
+//THIS AI GENERATED PROTOTYPE TO LEARN ABOUT A*
 
 // ------------------------------------------------------------
 // POSITION
