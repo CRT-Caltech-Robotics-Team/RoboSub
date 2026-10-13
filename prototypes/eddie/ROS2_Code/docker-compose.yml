@@ -1,0 +1,13 @@
+services:
+  ros2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: robosub-mobility
+    working_dir: /workspace
+    volumes:
+      - .:/workspace
+    network_mode: host
+    stdin_open: true
+    tty: true
+    command: bash
