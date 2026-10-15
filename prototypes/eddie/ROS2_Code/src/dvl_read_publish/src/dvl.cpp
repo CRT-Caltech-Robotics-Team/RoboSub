@@ -25,9 +25,9 @@ class DVLNode : public rclcpp::Node
 public:
     DVLNode() : Node("dvl_node")
     {
-        vel_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("/dvl/velocity", 10);
-        mavros_vel_pub_ = this->create_publisher<geometry_msgs::msg::TwistStamped>("/mavros/setpoint_velocity/cmd_vel_unstamped", 10);
-        imu_pub_ = this->create_publisher<sensor_msgs::msg::Imu>("/dvl/imu", 10);
+        vel_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("/dvl/velocity", rclcpp::QoS(10));
+        mavros_vel_pub_ = this->create_publisher<geometry_msgs::msg::TwistStamped>("/mavros/setpoint_velocity/cmd_vel_unstamped", rclcpp::QoS(10));
+        imu_pub_ = this->create_publisher<sensor_msgs::msg::Imu>("/dvl/imu", rclcpp::QoS(10));
 
         initSerial();
         initDVL();
