@@ -4,6 +4,9 @@
 	(generator_version "10.0")
 	(uuid "ad54c199-0081-4703-957a-a8715152e0c2")
 	(paper "A4")
+	(title_block
+		(title "Thruster Board Ver 2")
+	)
 	(lib_symbols
 		(symbol "1_Customlibrary:MAX_485"
 			(exclude_from_sim no)
@@ -4244,7 +4247,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Conn_01x04_Socket"
+		(property "Value" "Analog"
 			(at 139.7 92.7099 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4412,7 +4415,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Conn_01x02_Socket"
+		(property "Value" "RX1"
 			(at 109.22 132.0799 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4640,7 +4643,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "23b8e5ef-2c0a-488e-822d-1a2ce4fdddda")
-		(property "Reference" "VBAT1"
+		(property "Reference" "VBAT"
 			(at 28.575 151.13 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4703,7 +4706,7 @@
 		(instances
 			(project "thruster daisy chain"
 				(path "/ad54c199-0081-4703-957a-a8715152e0c2"
-					(reference "VBAT1")
+					(reference "VBAT")
 					(unit 1)
 				)
 			)
@@ -4721,7 +4724,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "3fea449a-ab82-49e7-ae27-2f5a1603befe")
-		(property "Reference" "SWITCH1"
+		(property "Reference" "5VThruster"
 			(at 28.575 124.46 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4783,7 +4786,7 @@
 		(instances
 			(project "thruster daisy chain"
 				(path "/ad54c199-0081-4703-957a-a8715152e0c2"
-					(reference "SWITCH1")
+					(reference "5VThruster")
 					(unit 1)
 				)
 			)
@@ -4791,7 +4794,7 @@
 	)
 	(symbol
 		(lib_id "power:+5V")
-		(at 33.02 143.51 270)
+		(at 33.02 143.51 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4802,7 +4805,7 @@
 		(fields_autoplaced yes)
 		(uuid "41decc86-6f6c-40f7-aef8-c9f2d6f286ee")
 		(property "Reference" "#PWR09"
-			(at 29.21 143.51 0)
+			(at 33.02 147.32 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4813,7 +4816,7 @@
 			)
 		)
 		(property "Value" "+5V"
-			(at 36.83 143.5099 90)
+			(at 35.56 142.2399 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -4891,7 +4894,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Conn_01x24_Socket"
+		(property "Value" "Teensy R"
 			(at 165.1 80.0099 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5254,7 +5257,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 158.75 52.07 270)
+		(at 158.75 52.07 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -5265,7 +5268,7 @@
 		(fields_autoplaced yes)
 		(uuid "69902a57-253f-4e5a-a7c3-36cf01765e33")
 		(property "Reference" "#PWR012"
-			(at 152.4 52.07 0)
+			(at 158.75 58.42 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5276,14 +5279,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 154.94 52.0699 90)
+			(at 161.29 53.3399 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -5354,7 +5357,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Conn_01x02_Socket"
+		(property "Value" "RX2"
 			(at 109.22 139.6999 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5683,7 +5686,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "7e04d1ac-dbbc-4cb3-b693-54cf046a78d2")
-		(property "Reference" "5V1"
+		(property "Reference" "5VBoard"
 			(at 28.575 138.43 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5745,7 +5748,7 @@
 		(instances
 			(project "thruster daisy chain"
 				(path "/ad54c199-0081-4703-957a-a8715152e0c2"
-					(reference "5V1")
+					(reference "5VBoard")
 					(unit 1)
 				)
 			)
@@ -5753,7 +5756,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 33.02 132.08 90)
+		(at 33.02 132.08 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -5764,7 +5767,7 @@
 		(fields_autoplaced yes)
 		(uuid "84d2159e-f01f-4bc1-a760-5fc97dda9c22")
 		(property "Reference" "#PWR015"
-			(at 39.37 132.08 0)
+			(at 33.02 138.43 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5775,14 +5778,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 36.83 132.0799 90)
+			(at 35.56 133.3499 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify right)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -6009,7 +6012,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Conn_01x06_Socket"
+		(property "Value" "Pixhawk Port"
 			(at 185.42 67.3099 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6103,7 +6106,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Conn_01x24_Socket"
+		(property "Value" "Teensy L"
 			(at 130.81 80.0099 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6409,7 +6412,7 @@
 				(justify left)
 			)
 		)
-		(property "Value" "Conn_01x02_Socket"
+		(property "Value" "RX3"
 			(at 109.22 147.3199 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6628,7 +6631,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 35.56 97.79 180)
+		(at 35.56 97.79 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -6639,7 +6642,7 @@
 		(fields_autoplaced yes)
 		(uuid "bbb5597c-a22f-49c7-bd2a-81ad5edbb57a")
 		(property "Reference" "#PWR05"
-			(at 35.56 91.44 0)
+			(at 35.56 104.14 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6650,13 +6653,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 35.56 92.71 0)
+			(at 38.1 99.0599 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
@@ -7508,7 +7512,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 120.65 49.53 180)
+		(at 120.65 49.53 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -7519,7 +7523,7 @@
 		(fields_autoplaced yes)
 		(uuid "ef368876-91f7-4df4-9a31-cf452087670d")
 		(property "Reference" "#PWR06"
-			(at 120.65 43.18 0)
+			(at 120.65 55.88 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -7530,13 +7534,14 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 120.65 44.45 0)
+			(at 123.19 50.7999 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
+				(justify left)
 			)
 		)
 		(property "Footprint" ""
