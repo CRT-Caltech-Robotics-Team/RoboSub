@@ -705,7 +705,7 @@
         "uuid": "ad54c199-0081-4703-957a-a8715152e0c2"
       }
     ],
-    "used_designators": "D1,#PWR2-17,R1-3",
+    "used_designators": "5VThruster1,D1,#PWR2-17,R1-3,5VBoard1,VBAT1",
     "variants": []
   },
   "sheets": [

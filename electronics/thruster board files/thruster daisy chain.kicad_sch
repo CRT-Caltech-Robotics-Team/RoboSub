@@ -4643,7 +4643,7 @@
 		(in_pos_files yes)
 		(dnp no)
 		(uuid "23b8e5ef-2c0a-488e-822d-1a2ce4fdddda")
-		(property "Reference" "VBAT"
+		(property "Reference" "VBAT1"
 			(at 28.575 151.13 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4664,7 +4664,7 @@
 				)
 			)
 		)
-		(property "Footprint" "1_Custom:XT60"
+		(property "Footprint" "Connector_AMASS:AMASS_XT60-M_1x02_P7.20mm_Vertical"
 			(at 27.94 156.21 0)
 			(hide yes)
 			(show_name no)
@@ -4706,7 +4706,7 @@
 		(instances
 			(project "thruster daisy chain"
 				(path "/ad54c199-0081-4703-957a-a8715152e0c2"
-					(reference "VBAT")
+					(reference "VBAT1")
 					(unit 1)
 				)
 			)
@@ -4724,7 +4724,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "3fea449a-ab82-49e7-ae27-2f5a1603befe")
-		(property "Reference" "5VThruster"
+		(property "Reference" "5VThruster1"
 			(at 28.575 124.46 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4786,7 +4786,7 @@
 		(instances
 			(project "thruster daisy chain"
 				(path "/ad54c199-0081-4703-957a-a8715152e0c2"
-					(reference "5VThruster")
+					(reference "5VThruster1")
 					(unit 1)
 				)
 			)
@@ -5686,7 +5686,7 @@
 		(dnp no)
 		(fields_autoplaced yes)
 		(uuid "7e04d1ac-dbbc-4cb3-b693-54cf046a78d2")
-		(property "Reference" "5VBoard"
+		(property "Reference" "5VBoard1"
 			(at 28.575 138.43 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5748,7 +5748,7 @@
 		(instances
 			(project "thruster daisy chain"
 				(path "/ad54c199-0081-4703-957a-a8715152e0c2"
-					(reference "5VBoard")
+					(reference "5VBoard1")
 					(unit 1)
 				)
 			)
