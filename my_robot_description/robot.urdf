@@ -1,0 +1,405 @@
+<?xml version="1.0" ?>
+<!-- Generated using onshape-to-robot -->
+<!-- Onshape document_id: 45f285961b23675c48e2d6f7 -->
+<robot name="my_robot">
+  <!-- Link urdf_base_link_assembly -->
+  <link name="urdf_base_link_assembly">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-09"/>
+      <inertia ixx="1e-09" ixy="0" ixz="0" iyy="1e-09" iyz="0" izz="1e-09"/>
+    </inertial>
+    <!-- Part urdf_base_link_assembly -->
+    <visual>
+      <origin xyz="0.81741 -1.0789 1.54633" rpy="3.14159 -0 3.14159"/>
+      <geometry>
+        <mesh filename="package://my_robot_description/assets/urdf_base_link_assembly.stl"/>
+      </geometry>
+      <material name="urdf_base_link_assembly_material">
+        <color rgba="0.615686 0.811765 0.929412 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.81741 -1.0789 1.54633" rpy="3.14159 -0 3.14159"/>
+      <geometry>
+        <mesh filename="package://my_robot_description/assets/urdf_base_link_assembly.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link video_ray_thruster -->
+  <link name="video_ray_thruster">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-09"/>
+      <inertia ixx="1e-09" ixy="0" ixz="0" iyy="1e-09" iyz="0" izz="1e-09"/>
+    </inertial>
+    <!-- Part video_ray_thruster -->
+    <visual>
+      <origin xyz="-0.0130032 -0.0984966 -0.127302" rpy="0 -0 -0"/>
+      <geometry>
+        <mesh filename="package://my_robot_description/assets/video_ray_thruster.stl"/>
+      </geometry>
+      <material name="video_ray_thruster_material">
+        <color rgba="0.501961 0.501961 0.501961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0130032 -0.0984966 -0.127302" rpy="0 -0 -0"/>
+      <geometry>
+        <mesh filename="package://my_robot_description/assets/video_ray_thruster.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Frame thruster1 (dummy link + fixed joint) -->
+  <link name="thruster1">
+    <origin xyz="0 0 0" rpy="0 -0 0"/>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-9"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
+  <joint name="thruster1_frame" type="fixed">
+    <origin xyz="0.0810815 0 -0.066675" rpy="1.5708 -0 1.5708"/>
+    <parent link="video_ray_thruster"/>
+    <child link="thruster1"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  <!-- Joint from urdf_base_link_assembly to video_ray_thruster -->
+  <joint name="thruster1" type="fixed">
+    <origin xyz="-0.247038 0.224696 0.0333302" rpy="-1.5708 -0 -2.35619"/>
+    <parent link="urdf_base_link_assembly"/>
+    <child link="video_ray_thruster"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="100"/>
+  </joint>
+  <!-- Link video_ray_thruster_2 -->
+  <link name="video_ray_thruster_2">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-09"/>
+      <inertia ixx="1e-09" ixy="0" ixz="0" iyy="1e-09" iyz="0" izz="1e-09"/>
+    </inertial>
+    <!-- Part video_ray_thruster_2 -->
+    <visual>
+      <origin xyz="-0.0130032 -0.0984966 -0.127302" rpy="0 0 -0"/>
+      <geometry>
+        <mesh filename="package://my_robot_description/assets/video_ray_thruster.stl"/>
+      </geometry>
+      <material name="video_ray_thruster_2_material">
+        <color rgba="0.501961 0.501961 0.501961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0130032 -0.0984966 -0.127302" rpy="0 0 -0"/>
+      <geometry>
+        <mesh filename="package://my_robot_description/assets/video_ray_thruster.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Frame thruster2 (dummy link + fixed joint) -->
+  <link name="thruster2">
+    <origin xyz="0 0 0" rpy="0 -0 0"/>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-9"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
+  <joint name="thruster2_frame" type="fixed">
+    <origin xyz="0.0810815 0 -0.066675" rpy="1.5708 -0 1.5708"/>
+    <parent link="video_ray_thruster_2"/>
+    <child link="thruster2"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  <!-- Joint from urdf_base_link_assembly to video_ray_thruster_2 -->
+  <joint name="thruster2" type="fixed">
+    <origin xyz="-0.247038 -0.238814 0.0333302" rpy="1.5708 -0 2.35619"/>
+    <parent link="urdf_base_link_assembly"/>
+    <child link="video_ray_thruster_2"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="100"/>
+  </joint>
+  <!-- Link video_ray_thruster_3 -->
+  <link name="video_ray_thruster_3">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-09"/>
+      <inertia ixx="1e-09" ixy="0" ixz="0" iyy="1e-09" iyz="0" izz="1e-09"/>
+    </inertial>
+    <!-- Part video_ray_thruster_3 -->
+    <visual>
+      <origin xyz="-0.0130032 -0.0984966 -0.127302" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://my_robot_description/assets/video_ray_thruster.stl"/>
+      </geometry>
+      <material name="video_ray_thruster_3_material">
+        <color rgba="0.501961 0.501961 0.501961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0130032 -0.0984966 -0.127302" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://my_robot_description/assets/video_ray_thruster.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Frame thruster3 (dummy link + fixed joint) -->
+  <link name="thruster3">
+    <origin xyz="0 0 0" rpy="0 -0 0"/>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-9"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
+  <joint name="thruster3_frame" type="fixed">
+    <origin xyz="0.0810815 0 -0.066675" rpy="1.5708 -0 1.5708"/>
+    <parent link="video_ray_thruster_3"/>
+    <child link="thruster3"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  <!-- Joint from urdf_base_link_assembly to video_ray_thruster_3 -->
+  <joint name="thruster3" type="fixed">
+    <origin xyz="0.247361 0.224696 0.0333302" rpy="1.5708 0 -0.785398"/>
+    <parent link="urdf_base_link_assembly"/>
+    <child link="video_ray_thruster_3"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="100"/>
+  </joint>
+  <!-- Link video_ray_thruster_4 -->
+  <link name="video_ray_thruster_4">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-09"/>
+      <inertia ixx="1e-09" ixy="0" ixz="0" iyy="1e-09" iyz="0" izz="1e-09"/>
+    </inertial>
+    <!-- Part video_ray_thruster_4 -->
+    <visual>
+      <origin xyz="-0.0130032 -0.0984966 -0.127302" rpy="0 0 -0"/>
+      <geometry>
+        <mesh filename="package://my_robot_description/assets/video_ray_thruster.stl"/>
+      </geometry>
+      <material name="video_ray_thruster_4_material">
+        <color rgba="0.501961 0.501961 0.501961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0130032 -0.0984966 -0.127302" rpy="0 0 -0"/>
+      <geometry>
+        <mesh filename="package://my_robot_description/assets/video_ray_thruster.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Frame thruster4 (dummy link + fixed joint) -->
+  <link name="thruster4">
+    <origin xyz="0 0 0" rpy="0 -0 0"/>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-9"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
+  <joint name="thruster4_frame" type="fixed">
+    <origin xyz="0.0810815 0 -0.066675" rpy="1.5708 -0 1.5708"/>
+    <parent link="video_ray_thruster_4"/>
+    <child link="thruster4"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  <!-- Joint from urdf_base_link_assembly to video_ray_thruster_4 -->
+  <joint name="thruster4" type="fixed">
+    <origin xyz="0.247361 -0.238814 0.0333302" rpy="-1.5708 0 0.785398"/>
+    <parent link="urdf_base_link_assembly"/>
+    <child link="video_ray_thruster_4"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="100"/>
+  </joint>
+  <!-- Link video_ray_thruster_5 -->
+  <link name="video_ray_thruster_5">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-09"/>
+      <inertia ixx="1e-09" ixy="0" ixz="0" iyy="1e-09" iyz="0" izz="1e-09"/>
+    </inertial>
+    <!-- Part video_ray_thruster_5 -->
+    <visual>
+      <origin xyz="-0.0130032 -0.0984966 -0.127302" rpy="0 0 -0"/>
+      <geometry>
+        <mesh filename="package://my_robot_description/assets/video_ray_thruster.stl"/>
+      </geometry>
+      <material name="video_ray_thruster_5_material">
+        <color rgba="0.501961 0.501961 0.501961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0130032 -0.0984966 -0.127302" rpy="0 0 -0"/>
+      <geometry>
+        <mesh filename="package://my_robot_description/assets/video_ray_thruster.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Frame thruster5 (dummy link + fixed joint) -->
+  <link name="thruster5">
+    <origin xyz="0 0 0" rpy="0 -0 0"/>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-9"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
+  <joint name="thruster5_frame" type="fixed">
+    <origin xyz="0.0810815 0 -0.066675" rpy="1.5708 -0 1.5708"/>
+    <parent link="video_ray_thruster_5"/>
+    <child link="thruster5"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  <!-- Joint from urdf_base_link_assembly to video_ray_thruster_5 -->
+  <joint name="thruster5" type="fixed">
+    <origin xyz="-0.0121194 0.220017 0.0670322" rpy="1.5708 1.5708 0"/>
+    <parent link="urdf_base_link_assembly"/>
+    <child link="video_ray_thruster_5"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="100"/>
+  </joint>
+  <!-- Link video_ray_thruster_6 -->
+  <link name="video_ray_thruster_6">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-09"/>
+      <inertia ixx="1e-09" ixy="0" ixz="0" iyy="1e-09" iyz="0" izz="1e-09"/>
+    </inertial>
+    <!-- Part video_ray_thruster_6 -->
+    <visual>
+      <origin xyz="-0.0130032 -0.0984966 -0.127302" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="package://my_robot_description/assets/video_ray_thruster.stl"/>
+      </geometry>
+      <material name="video_ray_thruster_6_material">
+        <color rgba="0.501961 0.501961 0.501961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0130032 -0.0984966 -0.127302" rpy="0 -0 0"/>
+      <geometry>
+        <mesh filename="package://my_robot_description/assets/video_ray_thruster.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Frame thruster6 (dummy link + fixed joint) -->
+  <link name="thruster6">
+    <origin xyz="0 0 0" rpy="0 -0 0"/>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-9"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
+  <joint name="thruster6_frame" type="fixed">
+    <origin xyz="0.0810815 0 -0.066675" rpy="1.5708 -0 1.5708"/>
+    <parent link="video_ray_thruster_6"/>
+    <child link="thruster6"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  <!-- Joint from urdf_base_link_assembly to video_ray_thruster_6 -->
+  <joint name="thruster6" type="fixed">
+    <origin xyz="-0.0121194 -0.234135 0.0670322" rpy="-1.5708 1.5708 0"/>
+    <parent link="urdf_base_link_assembly"/>
+    <child link="video_ray_thruster_6"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="100"/>
+  </joint>
+  <!-- Link dvladap_urdf -->
+  <link name="dvladap_urdf">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-09"/>
+      <inertia ixx="1e-09" ixy="0" ixz="0" iyy="1e-09" iyz="0" izz="1e-09"/>
+    </inertial>
+    <!-- Part dvladap_urdf -->
+    <visual>
+      <origin xyz="-0 0 0.043815" rpy="-1.5708 -0 0"/>
+      <geometry>
+        <mesh filename="package://my_robot_description/assets/dvladap_urdf.stl"/>
+      </geometry>
+      <material name="dvladap_urdf_material">
+        <color rgba="0.917647 0.917647 0.917647 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0 0 0.043815" rpy="-1.5708 -0 0"/>
+      <geometry>
+        <mesh filename="package://my_robot_description/assets/dvladap_urdf.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Frame dvl (dummy link + fixed joint) -->
+  <link name="dvl">
+    <origin xyz="0 0 0" rpy="0 -0 0"/>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-9"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
+  <joint name="dvl_frame" type="fixed">
+    <origin xyz="0 -0 -0.006604" rpy="-0 0 1.5708"/>
+    <parent link="dvladap_urdf"/>
+    <child link="dvl"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  <!-- Joint from urdf_base_link_assembly to dvladap_urdf -->
+  <joint name="dvl" type="fixed">
+    <origin xyz="0.152561 -0.00705887 -0.00959581" rpy="0 0 1.5708"/>
+    <parent link="urdf_base_link_assembly"/>
+    <child link="dvladap_urdf"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="100"/>
+  </joint>
+  <!-- Link pixhawk4 -->
+  <link name="pixhawk4">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-09"/>
+      <inertia ixx="1e-09" ixy="0" ixz="0" iyy="1e-09" iyz="0" izz="1e-09"/>
+    </inertial>
+    <!-- Part pixhawk4 -->
+    <visual>
+      <origin xyz="0 0.00543088 -0.042" rpy="1.5708 -0 -0"/>
+      <geometry>
+        <mesh filename="package://my_robot_description/assets/pixhawk4.stl"/>
+      </geometry>
+      <material name="pixhawk4_material">
+        <color rgba="0.980392 0.713725 0.00392157 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 0.00543088 -0.042" rpy="1.5708 -0 -0"/>
+      <geometry>
+        <mesh filename="package://my_robot_description/assets/pixhawk4.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Frame pixhawk (dummy link + fixed joint) -->
+  <link name="pixhawk">
+    <origin xyz="0 0 0" rpy="0 -0 0"/>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-9"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+  </link>
+  <joint name="pixhawk_frame" type="fixed">
+    <origin xyz="0.00075666 -0.00456912 -0.0423632" rpy="1.5708 -1.5708 0"/>
+    <parent link="pixhawk4"/>
+    <child link="pixhawk"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  <!-- Joint from urdf_base_link_assembly to pixhawk4 -->
+  <joint name="pixhawk" type="fixed">
+    <origin xyz="-0.0421374 -0.00705887 0.044303" rpy="-1.5708 0 1.5708"/>
+    <parent link="urdf_base_link_assembly"/>
+    <child link="pixhawk4"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="100"/>
+  </joint>
+</robot>

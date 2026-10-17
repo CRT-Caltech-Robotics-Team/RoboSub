@@ -1,0 +1,13 @@
+{
+    "configuration": "default",
+    "documentId": "45f285961b23675c48e2d6f7",
+    "documentMicroversion": "07cabc17e0fa9cc59f612745",
+    "elementId": "bb019e198cf8e45e73e1b6dd",
+    "fullConfiguration": "default",
+    "id": "McUkE/Awaku36AQd4",
+    "isStandardContent": false,
+    "name": "URDF Base Link Assembly <1>",
+    "partId": "KFzM",
+    "suppressed": false,
+    "type": "Part"
+}
