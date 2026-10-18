@@ -1,15 +1,11 @@
-# RoboSub Software
+# RoboSub Software and Documentation Hub
 
-This site contains the software documentation for the team's autonomous
-underwater vehicle.
+This page contains the following
 
-Please see:
+1) Software tools and setup instructions for members (Solidworks, git, Altium, LLMs, etc)
 
-*firmware* for firmware documentation on all PCBs
+2) Actual RoboSub software setup and tools (ROS2, language toolchains, setup scripts)
 
-*setup* for build and deploy instructions
+3) Documentation for RoboSub firmware
 
-*guidelines* for development guidelines (code quality, committing, documentation)
-
-*algorithms* for control algorithms (path planning + )
 
