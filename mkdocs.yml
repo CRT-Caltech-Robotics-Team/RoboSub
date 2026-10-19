@@ -32,7 +32,7 @@ nav:
       - Solidworks Setup:
           - Windows: mechanical/solidworks-setup/windows.md
           - Mac / Linux: mechanical/solidworks-setup/mac-linux.md
-
+      - O Ring Design Guide: mechanical/O-ring Groove Design.md
   - Firmware:
       - PDB: firmware/pdb.md
       - BMS: firmware/bms.md
