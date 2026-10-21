@@ -38,7 +38,7 @@ nav:
       - O Ring Design Guide: mechanical/O-ring Groove Design.md
   - Firmware:
       - Hydrophone: firmware/HydrophoneBoard.md
-      - Pressure Transducer: PressureTransducerBoard.md
+      - Pressure Transducer: firmware/PressureTransducerBoard.md
     
 
   - Guidelines:
