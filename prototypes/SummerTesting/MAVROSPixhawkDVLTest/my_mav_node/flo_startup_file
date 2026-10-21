@@ -1,0 +1,24 @@
+Power the Jetson, Teensy, and Pixhawk. Ensure the Pixhawk can run without GPS. The teensy should be flashed with the appropriate thruster script.
+SSH into the Jetson.
+
+# Every terminal
+source /opt/ros/humble/setup.bash
+source ~/Robosub/prototypes/SummerTesting/MAVROSPixhawkDVLTest/install/setup.bash
+
+# T1 – wait for "Got HEARTBEAT, connected"
+ros2 run mavros mavros_node --ros-args -p fcu_url:=/dev/ttyTHS1:115200
+# T2
+ros2 run my_mav_node myprogram
+# T3
+ros2 run my_mav_node status_node
+
+# Checks
+ros2 topic echo /mavros/debug_value/named_value_float   # expect name: DEPTH
+ros2 topic echo --once /mavros/odometry/out             # z ≈ -depth, twist = DVL vel
+# Teensy serial monitor: stream=OK
+
+# Thruster check
+ros2 run my_mav_node thruster_check --ros-args -p throttle:=1.0 -p hold_s:=2.0
+
+# Disarm
+ros2 service call /mavros/cmd/arming mavros_msgs/srv/CommandBool "{value: false}"
