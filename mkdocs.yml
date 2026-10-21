@@ -1,4 +1,4 @@
-site_name: RoboSub Software
+site_name: RoboSub Software and Documentation Hub
 site_description: Software documentation for the RoboSub team
 site_url: https://crt.robosub.io/
 
@@ -28,14 +28,18 @@ nav:
       - AI: general-tools/AI.md
       - Git: general-tools/git.md
 
+  - Software:
+      - Setup: software/setup.md
+
   - Mechanical:
       - Solidworks Setup:
           - Windows: mechanical/solidworks-setup/windows.md
           - Mac / Linux: mechanical/solidworks-setup/mac-linux.md
       - O Ring Design Guide: mechanical/O-ring Groove Design.md
   - Firmware:
-      - PDB: firmware/pdb.md
-      - BMS: firmware/bms.md
+      - Hydrophone: firmware/HydrophoneBoard.md
+      - Pressure Transducer: firmware/PressureTransducerBoard.md
+    
 
   - Guidelines:
       - guidelines.md
