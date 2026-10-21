@@ -1,1 +1,1 @@
-[RoboSub documentation](https://crt-caltech-robotics-team.github.io/RoboSub/)
+[RoboSub documentation](https://caltechroboticsteam.github.io/RoboSub/)
