@@ -1,0 +1,543 @@
+<title>Pool to Autonomy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+:root{
+  --ground:#EEF3F4; --surface:#FFFFFF; --surface-2:#E4EDEF;
+  --ink:#0F2229; --ink-soft:#4E6872; --ink-faint:#7B939C;
+  --rule:#CFDDE1; --rule-soft:#DFE9EB;
+  --accent:#C9530F; --accent-soft:#FBEADF;
+  --data:#116A7E; --data-soft:#DFEDF1;
+  --warn:#8A5A06; --warn-soft:#F8EED9;
+  --good:#1F6B4A; --good-soft:#DFEFE6;
+  --shadow:0 1px 2px rgba(15,34,41,.06), 0 8px 24px -12px rgba(15,34,41,.18);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#071318; --surface:#0D1F26; --surface-2:#122A33;
+    --ink:#DFEDF1; --ink-soft:#93ACB5; --ink-faint:#6B858F;
+    --rule:#1E3944; --rule-soft:#162C35;
+    --accent:#FF8A45; --accent-soft:#2A1710;
+    --data:#4CBAD2; --data-soft:#0E2A33;
+    --warn:#E0A84A; --warn-soft:#2A2110;
+    --good:#5FC79A; --good-soft:#0F2A20;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#071318; --surface:#0D1F26; --surface-2:#122A33;
+  --ink:#DFEDF1; --ink-soft:#93ACB5; --ink-faint:#6B858F;
+  --rule:#1E3944; --rule-soft:#162C35;
+  --accent:#FF8A45; --accent-soft:#2A1710;
+  --data:#4CBAD2; --data-soft:#0E2A33;
+  --warn:#E0A84A; --warn-soft:#2A2110;
+  --good:#5FC79A; --good-soft:#0F2A20;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground); color:var(--ink);
+  font-family:"Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  font-size:17px; line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1000px; margin:0 auto; padding:0 28px 96px}
+.col{max-width:70ch}
+
+h1,h2,h3,.eyebrow,.mast-sub{font-family:Archivo, ui-sans-serif, system-ui, sans-serif; text-wrap:balance}
+h2{font-size:1.62rem; font-weight:700; letter-spacing:-.015em; margin:0 0 6px}
+h3{font-size:1.06rem; font-weight:700; letter-spacing:-.005em; margin:0 0 6px}
+p{margin:0 0 14px}
+a{color:var(--data)}
+code,kbd{font-family:"IBM Plex Mono", ui-monospace, monospace; font-size:.86em}
+:where(p,li,td) code{background:var(--surface-2); padding:.1em .38em; border-radius:3px; color:var(--ink)}
+
+/* ---------- masthead ---------- */
+.mast{padding:56px 0 30px; border-bottom:1px solid var(--rule)}
+.gauge{
+  height:5px; border-radius:3px; margin-bottom:26px;
+  background:linear-gradient(90deg, var(--data) 0%, var(--data) 22%, var(--accent) 22%, var(--accent) 30%, var(--rule) 30%);
+}
+.mast h1{font-size:clamp(2.3rem,5.4vw,3.5rem); font-weight:800; letter-spacing:-.032em; line-height:1.02; margin:0 0 14px}
+.mast-sub{font-size:1.16rem; font-weight:500; color:var(--ink-soft); max-width:60ch; line-height:1.45}
+.eyebrow{
+  font-size:.72rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--accent); margin:0 0 12px;
+}
+
+/* ---------- sections ---------- */
+section{padding-top:52px}
+.sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:22px; border-top:1px solid var(--rule-soft); padding-top:22px}
+.sec-num{
+  font-family:"IBM Plex Mono", monospace; font-size:.78rem; font-weight:500;
+  color:var(--ink-faint); padding-top:.42em; font-variant-numeric:tabular-nums;
+}
+.sec-head p{margin:4px 0 0; color:var(--ink-soft); font-size:.97rem}
+
+/* ---------- callouts ---------- */
+.note{
+  border-left:3px solid var(--accent); background:var(--accent-soft);
+  padding:16px 20px; border-radius:0 6px 6px 0; margin:0 0 20px;
+}
+.note.warn{border-left-color:var(--warn); background:var(--warn-soft)}
+.note.good{border-left-color:var(--good); background:var(--good-soft)}
+.note p:last-child{margin-bottom:0}
+.note strong{font-family:Archivo, sans-serif; font-weight:700}
+.col ol{margin:0 0 16px; padding-left:22px}
+.col ol li{margin-bottom:5px}
+kbd{
+  background:var(--surface); border:1px solid var(--rule); border-bottom-width:2px;
+  border-radius:4px; padding:1px 6px; font-size:.82em; color:var(--ink);
+}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto; margin:0 0 22px; border:1px solid var(--rule); border-radius:8px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; font-size:.93rem}
+th,td{text-align:left; padding:11px 16px; border-bottom:1px solid var(--rule-soft); vertical-align:top}
+thead th{
+  font-family:Archivo, sans-serif; font-size:.7rem; font-weight:700; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink-faint); background:var(--surface-2);
+  border-bottom:1px solid var(--rule); white-space:nowrap;
+}
+tbody tr:last-child td{border-bottom:none}
+td.num{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; white-space:nowrap}
+.tag{
+  display:inline-block; font-family:Archivo,sans-serif; font-size:.68rem; font-weight:700;
+  letter-spacing:.07em; text-transform:uppercase; padding:2px 8px; border-radius:20px; white-space:nowrap;
+}
+.tag.bad{background:var(--accent-soft); color:var(--accent); box-shadow:inset 0 0 0 1px currentColor}
+.tag.ok{background:var(--good-soft); color:var(--good); box-shadow:inset 0 0 0 1px currentColor}
+.tag.mid{background:var(--warn-soft); color:var(--warn); box-shadow:inset 0 0 0 1px currentColor}
+
+/* ---------- code ---------- */
+pre{
+  background:var(--surface); border:1px solid var(--rule); border-left:3px solid var(--data);
+  border-radius:0 8px 8px 0; padding:15px 18px; overflow-x:auto; margin:0 0 18px;
+  font-family:"IBM Plex Mono",monospace; font-size:.85rem; line-height:1.66; color:var(--ink);
+}
+pre .c{color:var(--ink-faint)}
+pre .p{color:var(--accent); font-weight:500}
+
+/* ---------- figure ---------- */
+figure{margin:0 0 24px}
+figure svg{display:block; width:100%; max-width:100%; height:auto; color:var(--ink)}
+figcaption{font-size:.88rem; color:var(--ink-soft); margin-top:12px; max-width:66ch}
+
+/* ---------- concept cards ---------- */
+.cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(268px,1fr)); gap:14px; margin-bottom:22px}
+.card{background:var(--surface); border:1px solid var(--rule); border-radius:9px; padding:17px 19px; box-shadow:var(--shadow)}
+.card h3{color:var(--ink)}
+.card p{font-size:.93rem; color:var(--ink-soft); margin:0}
+
+/* ---------- roadmap rail ---------- */
+.rail{position:relative; margin:0 0 8px; padding-left:0}
+.phase{position:relative; display:grid; grid-template-columns:78px 1fr; gap:22px; padding-bottom:30px}
+.phase:last-child{padding-bottom:4px}
+.depth{position:relative; text-align:right; padding-top:2px}
+.depth b{
+  display:block; font-family:Archivo,sans-serif; font-size:.98rem; font-weight:800;
+  color:var(--ink); letter-spacing:-.01em;
+}
+.depth span{
+  display:block; font-family:"IBM Plex Mono",monospace; font-size:.7rem;
+  color:var(--ink-faint); letter-spacing:.04em;
+}
+/* the rail line + tick */
+.phase::before{
+  content:""; position:absolute; left:92px; top:9px; bottom:-9px; width:1px; background:var(--rule);
+}
+.phase:last-child::before{display:none}
+.phase::after{
+  content:""; position:absolute; left:87px; top:5px; width:11px; height:11px; border-radius:50%;
+  background:var(--ground); border:2.5px solid var(--data);
+}
+.phase.now::after{background:var(--accent); border-color:var(--accent)}
+.body-col h3{margin-bottom:4px}
+.body-col p{font-size:.95rem; color:var(--ink-soft); margin:0 0 8px}
+.outcome{
+  font-size:.88rem; color:var(--ink); background:var(--surface); border:1px solid var(--rule);
+  border-radius:6px; padding:8px 13px; display:inline-block;
+}
+.outcome b{font-family:Archivo,sans-serif; font-size:.68rem; letter-spacing:.09em; text-transform:uppercase; color:var(--data); display:block; margin-bottom:1px}
+
+footer{margin-top:64px; padding-top:22px; border-top:1px solid var(--rule); color:var(--ink-faint); font-size:.87rem}
+
+@media (max-width:620px){
+  body{font-size:16px}
+  .wrap{padding:0 18px 64px}
+  .phase{grid-template-columns:1fr; gap:8px}
+  .depth{text-align:left; display:flex; gap:10px; align-items:baseline; padding-left:26px}
+  .phase::before{left:8px}
+  .phase::after{left:3px}
+}
+@media (prefers-reduced-motion:no-preference){
+  a{transition:color .15s}
+}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px; border-radius:2px}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <div class="gauge"></div>
+  <p class="eyebrow">RoboSub · Autonomy Onboarding</p>
+  <h1>Pool to Autonomy</h1>
+  <p class="mast-sub">A verified ROS&nbsp;2 + Gazebo simulator for our AUV, and the path from “I installed ROS” to a sub that finds the gate on its own.</p>
+</header>
+
+<section>
+  <div class="sec-head">
+    <span class="sec-num">01</span>
+    <div>
+      <h2>Start with what the machine actually is</h2>
+      <p>Before any of this works, one assumption has to be corrected.</p>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="note">
+      <p><strong>This desktop is not the Jetson.</strong> It is an x86_64 workstation — and it had no ROS on it at all. The Jetson Orin Nano is a separate box. That is good news: this machine is dramatically better at running simulation than an Orin Nano will ever be, so sim belongs here and the Jetson stays the vehicle computer.</p>
+    </div>
+  </div>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Component</th><th>What's here</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>CPU / RAM</td><td class="num">Intel Core Ultra 9 285K · 24 cores · 62 GB</td><td><span class="tag ok">Excellent for sim</span></td></tr>
+        <tr><td>Storage</td><td class="num">1.8 TB NVMe, 1.5 TB free</td><td><span class="tag ok">Ample</span></td></tr>
+        <tr><td>OS</td><td class="num">Ubuntu 24.04.3 LTS (noble)</td><td><span class="tag mid">Native ROS is Jazzy, not Humble</span></td></tr>
+        <tr><td>GPU</td><td class="num">NVIDIA 10de:2b85 (Blackwell-class)</td><td><span class="tag bad">Driver not loading</span></td></tr>
+        <tr><td>ROS 2</td><td class="num">none — no /opt/ros, no apt repo</td><td><span class="tag bad">Was not installed</span></td></tr>
+        <tr><td>Docker</td><td class="num">28.5.0, rootless, nvidia runtime registered</td><td><span class="tag ok">Correctly configured</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col">
+    <h3>Why the sim runs in a container</h3>
+    <p>Ubuntu 24.04's native ROS 2 is <strong>Jazzy</strong>. The sub's Jetson runs <strong>Humble</strong> (JetPack 6 / Ubuntu 22.04). Running Humble in a container here means a node that works in simulation is the same node that runs on the vehicle — no distro mismatch discovered the week of competition.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="sec-num">02</span>
+    <div>
+      <h2>The one thing blocking you</h2>
+      <p>Everything renders on the CPU until this is fixed.</p>
+    </div>
+  </div>
+
+  <div class="col">
+    <p>A kernel update landed without its matching NVIDIA module, so <code>nvidia.ko</code> cannot load and all 3D falls back to <code>llvmpipe</code> — software rendering. Gazebo still runs at real-time; it is the camera that suffers, managing about 10 FPS.</p>
+  </div>
+
+  <div class="tw" style="max-width:660px">
+    <table>
+      <tbody>
+        <tr><td>Running kernel</td><td class="num">6.14.0-35-generic</td><td><span class="tag bad">no nvidia.ko</span></td></tr>
+        <tr><td>Previous kernel, still installed</td><td class="num">6.14.0-33-generic</td><td><span class="tag ok">full module set</span></td></tr>
+        <tr><td>Module / userspace version</td><td class="num">580.65.06 · both match</td><td><span class="tag ok">will load</span></td></tr>
+        <tr><td>Secure Boot</td><td class="num">enabled</td><td><span class="tag mid">signed modules only</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col">
+    <div class="note good">
+      <p><strong>You do not need root for this.</strong> Kernel <code>6.14.0-33</code> is still installed and still has a complete, correctly-versioned NVIDIA module set. Boot into it and the GPU works.</p>
+    </div>
+
+    <h3>Booting the working kernel</h3>
+    <p>The GRUB menu is hidden on this machine (<code>GRUB_TIMEOUT=0</code>), and it boots in UEFI mode, so:</p>
+    <ol>
+      <li>Reboot.</li>
+      <li>Press <kbd>Esc</kbd> repeatedly as soon as the firmware logo appears.</li>
+      <li><em>Advanced options for Ubuntu</em> → <em>Linux 6.14.0-33-generic</em>.</li>
+      <li>Confirm with <code>nvidia-smi</code>.</li>
+    </ol>
+    <p>This choice lasts one boot. The next restart goes back to the broken <code>-35</code> kernel unless you pick <code>-33</code> again.</p>
+
+    <div class="note warn">
+      <p><strong>This is a shared lab machine</strong> — <code>administrator</code>, <code>curc</code>, <code>rmc</code> and <code>rud</code> also have accounts on it. Check nobody is mid-run before rebooting.</p>
+    </div>
+
+    <h3>The permanent fix needs an admin</h3>
+    <p>Only <code>administrator</code> is in the sudo group. Ask them to run:</p>
+  </div>
+
+  <pre>sudo apt update
+sudo apt install -y linux-modules-nvidia-580-open-generic-hwe-24.04</pre>
+
+  <div class="col">
+    <p>That installs the module build for <code>6.14.0-35</code> and makes the fix survive reboots and future kernel updates.</p>
+    <div class="note warn">
+      <p><strong>Tell them not to switch to DKMS.</strong> Secure Boot is on and Canonical's prebuilt modules are already signed. DKMS-built modules would be unsigned and refuse to load — trading one broken driver for another.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="sec-num">03</span>
+    <div>
+      <h2>Run the sub</h2>
+      <p>The environment is built and verified at <code>~/robosub_ws</code>.</p>
+    </div>
+  </div>
+
+  <pre>cd ~/robosub_ws
+./run.sh                              <span class="c"># enter the container</span>
+colcon build --symlink-install
+source install/setup.bash
+ros2 launch robosub_sim pool.launch.py</pre>
+
+  <div class="col"><p>In a second terminal, <code>./run.sh</code> again attaches to the same container. Drive the sub:</p></div>
+
+  <pre>ros2 topic pub -r 10 /sub/cmd_vel geometry_msgs/msg/Twist \
+  '{linear: {x: 1.0}, angular: {z: 0.2}}'
+
+ros2 topic echo /sub/odom            <span class="c"># where the sub thinks it is</span>
+rqt_image_view /sub/camera/image_raw  <span class="c"># what the sub sees</span></pre>
+
+  <div class="col">
+    <div class="note good">
+      <p><strong>Measured on this machine, with the GPU still broken:</strong> real-time factor 1.0 · IMU 100 Hz · odometry 50 Hz · camera 10.3 Hz · cruise speed ≈ 1.3 m/s. The GUI opens and physics runs at full speed on the CPU alone — only the camera is waiting on the driver, so Phases 1–4 need no GPU at all.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="sec-num">04</span>
+    <div>
+      <h2>How the pieces connect</h2>
+      <p>One seam decides whether your code survives the move to the real sub.</p>
+    </div>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 880 400" role="img" aria-label="Control loop: Gazebo simulates physics and sensors, ros_gz_bridge converts Gazebo topics to ROS topics, an autonomy node consumes odometry and camera data and emits cmd_vel, the thruster mixer converts cmd_vel into four thrust commands that return through the bridge to Gazebo. On the real sub, Gazebo and the bridge are replaced by hardware drivers while every ROS topic stays the same.">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="currentColor"/>
+        </marker>
+        <marker id="ahA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M0,1 L9,5 L0,9 z" fill="var(--accent)"/>
+        </marker>
+      </defs>
+
+      <!-- Gazebo -->
+      <rect x="20" y="86" width="196" height="196" rx="8" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
+      <text x="118" y="112" text-anchor="middle" font-family="Archivo,sans-serif" font-size="14" font-weight="700" fill="currentColor">Gazebo Harmonic</text>
+      <text x="118" y="129" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="var(--ink-faint)">pool.sdf</text>
+      <rect x="40" y="143" width="156" height="27" rx="4" fill="var(--data-soft)"/>
+      <text x="118" y="161" text-anchor="middle" font-size="11.5" fill="var(--ink)">buoyancy + hydrodynamics</text>
+      <rect x="40" y="177" width="156" height="27" rx="4" fill="var(--data-soft)"/>
+      <text x="118" y="195" text-anchor="middle" font-size="11.5" fill="var(--ink)">4 × thruster</text>
+      <rect x="40" y="211" width="156" height="27" rx="4" fill="var(--data-soft)"/>
+      <text x="118" y="229" text-anchor="middle" font-size="11.5" fill="var(--ink)">camera + IMU</text>
+      <text x="118" y="258" text-anchor="middle" font-size="11" fill="var(--ink-faint)">the water and the vehicle</text>
+
+      <!-- Bridge -->
+      <rect x="272" y="86" width="118" height="196" rx="8" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
+      <text x="331" y="176" text-anchor="middle" font-family="Archivo,sans-serif" font-size="13" font-weight="700" fill="currentColor">ros_gz</text>
+      <text x="331" y="192" text-anchor="middle" font-family="Archivo,sans-serif" font-size="13" font-weight="700" fill="currentColor">_bridge</text>
+      <text x="331" y="212" text-anchor="middle" font-size="10.5" fill="var(--ink-faint)">bridge.yaml</text>
+
+      <!-- ROS nodes -->
+      <rect x="560" y="86" width="290" height="78" rx="8" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
+      <text x="705" y="115" text-anchor="middle" font-family="Archivo,sans-serif" font-size="13.5" font-weight="700" fill="currentColor">your autonomy node</text>
+      <text x="705" y="135" text-anchor="middle" font-size="11.5" fill="var(--ink-soft)">find the gate, decide where to go</text>
+      <text x="705" y="152" text-anchor="middle" font-size="11" fill="var(--ink-faint)">this is the part you write</text>
+
+      <rect x="560" y="216" width="290" height="66" rx="8" fill="var(--surface)" stroke="currentColor" stroke-width="1.5"/>
+      <text x="705" y="243" text-anchor="middle" font-family="Archivo,sans-serif" font-size="13.5" font-weight="700" fill="currentColor">thruster_mixer</text>
+      <text x="705" y="262" text-anchor="middle" font-size="11.5" fill="var(--ink-soft)">motion → individual thruster forces</text>
+
+      <!-- sensing path: gazebo -> bridge -> autonomy -->
+      <line x1="216" y1="128" x2="270" y2="128" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah)"/>
+      <line x1="390" y1="128" x2="556" y2="128" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah)"/>
+      <text x="473" y="119" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="var(--ink-soft)">/sub/odom · /sub/imu</text>
+      <text x="473" y="146" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="var(--ink-soft)">/sub/camera/image_raw</text>
+
+      <!-- cmd_vel: autonomy -> mixer -->
+      <line x1="705" y1="164" x2="705" y2="212" stroke="var(--accent)" stroke-width="2" marker-end="url(#ahA)"/>
+      <text x="717" y="193" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="var(--accent)">/sub/cmd_vel</text>
+
+      <!-- actuation path: mixer -> bridge -> gazebo -->
+      <line x1="556" y1="249" x2="392" y2="249" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah)"/>
+      <text x="473" y="241" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="var(--ink-soft)">/sub/thrust/ × 4</text>
+      <line x1="270" y1="249" x2="218" y2="249" stroke="currentColor" stroke-width="1.5" marker-end="url(#ah)"/>
+
+      <!-- swap seam -->
+      <line x1="475" y1="300" x2="475" y2="66" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="5 4" opacity=".75"/>
+      <text x="475" y="56" text-anchor="middle" font-family="Archivo,sans-serif" font-size="11.5" font-weight="700" fill="var(--accent)">swap here for the real sub</text>
+
+      <text x="248" y="330" text-anchor="middle" font-size="11.5" fill="var(--ink-soft)">replaced by thruster ESCs,</text>
+      <text x="248" y="347" text-anchor="middle" font-size="11.5" fill="var(--ink-soft)">camera and IMU drivers</text>
+      <text x="705" y="330" text-anchor="middle" font-size="11.5" fill="var(--ink-soft)">runs unchanged on the Jetson</text>
+      <text x="705" y="347" text-anchor="middle" font-size="11.5" fill="var(--ink-soft)">— same topics, same messages</text>
+    </svg>
+    <figcaption>Everything to the right of the dashed line is ordinary ROS 2 and never learns whether the water is real. That is the entire reason to bother with a simulator: the bridge is the only piece you throw away on competition day.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="sec-num">05</span>
+    <div>
+      <h2>Underwater navigation is not ground navigation</h2>
+      <p>Most ROS tutorials teach a wheeled robot on a flat floor. Almost none of it transfers directly.</p>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <h3>There is no GPS</h3>
+      <p>Radio does not penetrate water. The sub never receives an absolute position fix. Everything you know about where you are is integrated from motion — and integration drifts.</p>
+    </div>
+    <div class="card">
+      <h3>Six degrees of freedom</h3>
+      <p>A ground robot is x, y, heading. A sub is x, y, z, roll, pitch, yaw, and depth is something you actively hold, not something the floor holds for you.</p>
+    </div>
+    <div class="card">
+      <h3>Nav2 does not apply</h3>
+      <p>Nav2 assumes a 2D costmap and a ground base. Borrow its ideas — behavior trees, recovery behaviors — but you will write the control and planning yourself.</p>
+    </div>
+    <div class="card">
+      <h3>Depth is your one certainty</h3>
+      <p>A pressure sensor gives absolute depth that never drifts. It is the single most trustworthy number on the vehicle. Build your estimator around that anchor.</p>
+    </div>
+    <div class="card">
+      <h3>Drift is the whole problem</h3>
+      <p>IMU and DVL dead reckoning accumulate error without bound. Vision against known objects — the gate, the buoys — is what resets it. That loop <em>is</em> the navigation system.</p>
+    </div>
+    <div class="card">
+      <h3>Thrusters are not wheels</h3>
+      <p>Motion is produced by combining several thrusters at once. The mapping from “go forward and yaw” to individual forces is control allocation, and it lives in exactly one file.</p>
+    </div>
+  </div>
+
+  <div class="col">
+    <p>The simulator publishes perfect ground-truth odometry on <code>/sub/odom</code>. Use it to check your work, and then be disciplined: <strong>a navigation system that consumes ground truth is not a navigation system.</strong> Phase&nbsp;4 is where you stop.</p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="sec-num">06</span>
+    <div>
+      <h2>The path</h2>
+      <p>Each phase ends with something you can demonstrate in the pool world.</p>
+    </div>
+  </div>
+
+  <div class="rail">
+    <div class="phase now">
+      <div class="depth"><b>Phase 0</b><span>now</span></div>
+      <div class="body-col">
+        <h3>See the pool, then get the GPU back</h3>
+        <p>Launch with the GUI — it already works, at real-time factor 1.0. Fly the camera around, watch the sub bob, drag the gate somewhere else. Then reboot into kernel <code>6.14.0-33</code> so the camera stops crawling.</p>
+        <div class="outcome"><b>Done when</b> <code>nvidia-smi</code> prints the GPU and the camera runs well above 10 Hz.</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="depth"><b>Phase 1</b><span>~1 week</span></div>
+      <div class="body-col">
+        <h3>ROS 2, learned inside this sim</h3>
+        <p>Nodes, topics, messages, <code>tf2</code>, <code>ros2 bag</code>, <code>rqt_graph</code>. Skip the abstract turtle tutorials — you have a real vehicle publishing real data. Write a Python node that subscribes to <code>/sub/odom</code> and prints depth.</p>
+        <div class="outcome"><b>Done when</b> your own node drives the sub by publishing <code>/sub/cmd_vel</code>.</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="depth"><b>Phase 2</b><span>~1 week</span></div>
+      <div class="body-col">
+        <h3>The vehicle model</h3>
+        <p>Read <code>pool.sdf</code> line by line. Change the mass and watch the sub sink. Move a thruster and watch it spin. Understand why it is trimmed slightly buoyant.</p>
+        <div class="outcome"><b>Done when</b> you can add a fifth thruster and update <code>thruster_mixer.py</code> to use it.</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="depth"><b>Phase 3</b><span>~2 weeks</span></div>
+      <div class="body-col">
+        <h3>Closed-loop control</h3>
+        <p>A PID that holds depth, then one that holds heading from the IMU. Right now open-loop <code>cmd_vel</code> drifts sideways — that is real, and it is the thing feedback exists to kill.</p>
+        <div class="outcome"><b>Done when</b> the sub holds 2.0 m depth and a commanded heading while being pushed.</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="depth"><b>Phase 4</b><span>~2 weeks</span></div>
+      <div class="body-col">
+        <h3>State estimation without cheating</h3>
+        <p>Fuse IMU and depth in <code>robot_localization</code>'s EKF. Publish your own estimate. Compare it against <code>/sub/odom</code> ground truth and watch the error grow — that is dead-reckoning drift, and now it is a number you can plot.</p>
+        <div class="outcome"><b>Done when</b> control runs on your estimate and ground truth is only used for scoring.</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="depth"><b>Phase 5</b><span>~2 weeks</span></div>
+      <div class="body-col">
+        <h3>Seeing the gate</h3>
+        <p>Subscribe to the camera, threshold for the orange gate in HSV with OpenCV, find its centroid, publish a bearing. This is deliberately the same orange as the competition markers.</p>
+        <div class="outcome"><b>Done when</b> a <code>/gate/bearing</code> topic tracks the gate as the sub moves.</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="depth"><b>Phase 6</b><span>~3 weeks</span></div>
+      <div class="body-col">
+        <h3>Autonomy</h3>
+        <p>A state machine or behavior tree: dive to depth → search by yawing → align on the gate bearing → drive through → report. Add failure recovery, because the run will not go to plan.</p>
+        <div class="outcome"><b>Done when</b> the sub passes the gate with no human input, from a random start pose.</div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="depth"><b>Phase 7</b><span>ongoing</span></div>
+      <div class="body-col">
+        <h3>Onto the Jetson</h3>
+        <p>Rebuild the same container for arm64, swap the bridge for real drivers, and run hardware-in-the-loop. Because both sides are Humble, your nodes move across unchanged.</p>
+        <div class="outcome"><b>Done when</b> the autonomy node runs on the sub with the simulator feeding it sensor data.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="sec-num">07</span>
+    <div>
+      <h2>Field notes</h2>
+      <p>Each of these cost a debugging cycle while building the environment. They are commented in the world file too.</p>
+    </div>
+  </div>
+
+  <div class="col">
+    <h3>The sim dies the moment you apply real thrust</h3>
+    <p>Symptom: stable at 5&nbsp;N, dead within one second at 20&nbsp;N, with <code>ODE INTERNAL ERROR 1: assertion "aabbBound &gt;= dMinIntExact"</code>. The cause is the <em>quadratic angular</em> damping terms — <code>kPP</code>, <code>mQQ</code>, <code>nRR</code>. Gazebo integrates hydrodynamics explicitly, so once the hull picks up angular rate those terms diverge and the pose goes to infinity. The fix is to drop them and use strong <em>linear</em> angular damping instead.</p>
+
+    <h3>An IMU that publishes nothing</h3>
+    <p>Declaring an <code>&lt;sensor type="imu"&gt;</code> is not enough. The <code>Sensors</code> system only drives <em>rendering</em> sensors — camera, lidar. Non-rendering sensors each need their own world plugin, so the IMU stays silent until you add <code>gz-sim-imu-system</code>. The topic exists the whole time, which is what makes it confusing.</p>
+
+    <h3>Never use <code>&lt;plane&gt;</code> for collision</h3>
+    <p>An infinite plane gives ODE an unbounded AABB. The pool floor is a large box instead.</p>
+
+    <h3>Rootless Docker and the GPU</h3>
+    <p>This machine runs Docker rootless, which normally breaks GPU passthrough. It works here because <code>/etc/nvidia-container-runtime/config.toml</code> already sets <code>no-cgroups = true</code>. If GPU access ever fails inside the container, check that line first.</p>
+  </div>
+</section>
+
+<footer>
+  <p>Environment lives at <code>~/robosub_ws</code> on <code>miku</code> · ROS 2 Humble · Gazebo Harmonic (gz-sim 8.15) · verified end to end on software rendering.</p>
+</footer>
+
+</div>

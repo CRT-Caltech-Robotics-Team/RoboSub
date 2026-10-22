@@ -1,0 +1,70 @@
+# Maps Gazebo transport topics <-> ROS 2 topics.
+# This file is the seam between "the simulator" and "your robot code".
+# Point your nodes at the ROS side and they will run unchanged on the real sub.
+
+- ros_topic_name: "/sub/odom"
+  gz_topic_name: "/model/sub/odometry"
+  ros_type_name: "nav_msgs/msg/Odometry"
+  gz_type_name: "gz.msgs.Odometry"
+  direction: GZ_TO_ROS
+
+# Sensors. Named like the real drivers will name them, so state estimation
+# and control never know whether they are talking to Gazebo or hardware.
+- ros_topic_name: "/imu/data_raw"
+  gz_topic_name: "/sub/imu"
+  ros_type_name: "sensor_msgs/msg/Imu"
+  gz_type_name: "gz.msgs.IMU"
+  direction: GZ_TO_ROS
+
+# Raw altimeter; depth_sensor converts it to /depth (metres, positive down).
+- ros_topic_name: "/altimeter"
+  gz_topic_name: "/sub/altimeter"
+  ros_type_name: "ros_gz_interfaces/msg/Altimeter"
+  gz_type_name: "gz.msgs.Altimeter"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "/sub/camera/image_raw"
+  gz_topic_name: "/sub/camera"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  direction: GZ_TO_ROS
+
+# Thrusters 1-4: vectored horizontals at the hull corners, +-45 deg.
+# Thrusters 5-6: verticals amidships, port and starboard.
+# Numbering matches my_robot_description/robot.urdf and the hardware.
+
+- ros_topic_name: "/sub/thrust/t1"
+  gz_topic_name: "/model/sub/joint/thr_1_joint/cmd_thrust"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/sub/thrust/t2"
+  gz_topic_name: "/model/sub/joint/thr_2_joint/cmd_thrust"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/sub/thrust/t3"
+  gz_topic_name: "/model/sub/joint/thr_3_joint/cmd_thrust"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/sub/thrust/t4"
+  gz_topic_name: "/model/sub/joint/thr_4_joint/cmd_thrust"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/sub/thrust/t5"
+  gz_topic_name: "/model/sub/joint/thr_5_joint/cmd_thrust"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ
+
+- ros_topic_name: "/sub/thrust/t6"
+  gz_topic_name: "/model/sub/joint/thr_6_joint/cmd_thrust"
+  ros_type_name: "std_msgs/msg/Float64"
+  gz_type_name: "gz.msgs.Double"
+  direction: ROS_TO_GZ

@@ -1,0 +1,31 @@
+services:
+  robosub:
+    image: robosub-humble:latest
+    build:
+      context: .
+    container_name: robosub
+    # Rootless Docker + nvidia-container-runtime (no-cgroups=true is already
+    # set in /etc/nvidia-container-runtime/config.toml on this machine).
+    runtime: nvidia
+    environment:
+      DISPLAY: ${DISPLAY}
+      XAUTHORITY: /tmp/.docker.xauth
+      QT_X11_NO_MITSHM: 1
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: all
+      GZ_IP: 127.0.0.1
+      # Keep sim traffic on this box only; raise to reach the Jetson.
+      ROS_DOMAIN_ID: 0
+      ROS_LOCALHOST_ONLY: 1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /tmp/.docker.xauth:/tmp/.docker.xauth:rw
+      - ../src:/ws/src
+      - ../build:/ws/build
+      - ../install:/ws/install
+      - ../log:/ws/log
+    network_mode: host
+    ipc: host
+    stdin_open: true
+    tty: true
+    command: bash
