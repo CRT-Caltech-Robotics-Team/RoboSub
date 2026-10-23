@@ -12,9 +12,11 @@
   <depend>rclcpp</depend>
   <depend>mavros_msgs</depend>
   <depend>nav_msgs</depend>
+  <depend>sensor_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>eigen3_cmake_module</depend>
   <depend>tf2</depend>
+  <depend>tf2_ros</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
