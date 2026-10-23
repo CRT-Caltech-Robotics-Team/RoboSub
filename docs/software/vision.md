@@ -155,6 +155,11 @@ per-camera extrinsics, forward-ray intersection, confidence, gap and range.
 
 ## Add targets and train
 
+Use the [CVAT labeling guide](cvat.md) to organize student annotation jobs,
+review polygons/masks, and prepare real underwater training data. The current
+runtime accepts detection/keypoint models; segmentation outputs need separate
+integration.
+
 Start from `config/examples.yaml`. Enable only required targets; each needs a
 unique ROS-safe name, detector class, method and confidence threshold.
 
