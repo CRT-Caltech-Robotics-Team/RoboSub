@@ -1,0 +1,447 @@
+<?xml version="1.0" ?>
+<!-- A minimal RoboSub-style pool. Everything an AUV sim needs and nothing else:
+     water (buoyancy), drag (hydrodynamics), and thrusters you can command. -->
+<sdf version="1.9">
+  <world name="pool">
+
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <plugin filename="gz-sim-physics-system"          name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system"    name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system"          name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <!-- The Sensors system only drives RENDERING sensors (camera, lidar).
+         Non-rendering sensors each need their own system plugin or they
+         stay silent -- an IMU declared on the model publishes nothing
+         without this line. -->
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+    <!-- Same rule for the altimeter (our stand-in for the pressure/depth
+         sensor): it needs its own system plugin to publish. -->
+    <plugin filename="gz-sim-altimeter-system" name="gz::sim::systems::Altimeter"/>
+
+    <!-- WATER. "graded" = density changes with depth: 1000 kg/m^3 (water)
+         below z=0, 1 kg/m^3 (air) above it. That single line is what gives
+         you a real water surface the sub can break through. -->
+    <plugin filename="gz-sim-buoyancy-system" name="gz::sim::systems::Buoyancy">
+      <graded_buoyancy>
+        <default_density>1000</default_density>
+        <density_change>
+          <above_depth>0</above_depth>
+          <density>1</density>
+        </density_change>
+      </graded_buoyancy>
+    </plugin>
+
+    <gravity>0 0 -9.81</gravity>
+
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <!-- Pool floor, 10 m down -->
+    <model name="pool_floor">
+      <static>true</static>
+      <pose>0 0 -10 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <!-- A BOX, not a <plane>: an infinite plane gives ODE an unbounded
+               AABB and it aborts inside dxHashSpace::collide once the sub
+               picks up speed. Bounded geometry keeps collision stable. -->
+          <geometry><box><size>60 60 1</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>60 60 1</size></box></geometry>
+          <material>
+            <ambient>0.2 0.35 0.45 1</ambient>
+            <diffuse>0.25 0.45 0.55 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ================= THE SUB ================= -->
+    <!-- Start it 3 m underwater. -->
+    <model name="sub">
+      <pose>0 0 -3 0 0 0</pose>
+
+      <link name="base_link">
+        <inertial>
+          <!-- Hull is 0.5 x 0.4 x 0.2 m = 0.04 m^3, so it displaces 40 kg of
+               water. Mass 39.5 kg => slightly POSITIVELY buoyant, which is how
+               real AUVs are trimmed: lose power and the sub floats up rather
+               than sinking to the bottom of the pool. -->
+          <pose>0 0 -0.05 0 0 0</pose>
+          <mass>39.5</mass>
+          <inertia>
+            <ixx>0.658</ixx><iyy>0.955</iyy><izz>1.350</izz>
+            <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz>
+          </inertia>
+        </inertial>
+
+        <collision name="collision">
+          <geometry><box><size>0.5 0.4 0.2</size></box></geometry>
+        </collision>
+        <!-- Hull mesh from CAD. Pose reproduces the URDF's visual origin:
+             the Onshape assembly origin is ~2 m from the link origin and
+             flipped 180 deg about X and Z. The whole URDF frame is also yawed
+             180 deg relative to this sim (its x points aft, its y starboard,
+             z up), which collapses the total to a 180 deg roll. Purely cosmetic -- collision
+             stays a box, which is faster and far more numerically stable
+             than mesh-mesh contact. -->
+        <visual name="hull_mesh">
+          <pose>-0.81741 1.0789 1.54633 3.14159 0 0</pose>
+          <geometry>
+            <mesh>
+              <uri>file:///ws/src/robosub_sim/meshes/hull_lowpoly.stl</uri>
+            </mesh>
+          </geometry>
+          <material><ambient>0.6 0.8 0.9 1</ambient><diffuse>0.6 0.8 0.9 1</diffuse></material>
+        </visual>
+
+        <!-- Thruster BODIES. These are rigid parts of the hull, so they belong
+             here, not on the thr_N links: the Thruster plugin spins those
+             links as propellers, and a body mesh offset from the spin axis
+             orbits it (thrusters "flying in circles"). Poses are link_pose *
+             mesh_pose from the URDF, precomposed. Cosmetic only. -->
+        <visual name="thr_1_body">
+          <pose>-0.32818 0.33802 0.13183 -1.57080 -0.00000 -2.35619</pose>
+          <geometry><mesh><uri>file:///ws/src/robosub_sim/meshes/thruster_lowpoly.stl</uri></mesh></geometry>
+          <material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.25 0.25 0.25 1</diffuse></material>
+        </visual>
+        <visual name="thr_2_body">
+          <pose>-0.32818 -0.32390 -0.06517 1.57080 -0.00000 2.35619</pose>
+          <geometry><mesh><uri>file:///ws/src/robosub_sim/meshes/thruster_lowpoly.stl</uri></mesh></geometry>
+          <material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.25 0.25 0.25 1</diffuse></material>
+        </visual>
+        <visual name="thr_3_body">
+          <pose>0.32786 0.33802 -0.06517 1.57080 -0.00000 -0.78540</pose>
+          <geometry><mesh><uri>file:///ws/src/robosub_sim/meshes/thruster_lowpoly.stl</uri></mesh></geometry>
+          <material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.25 0.25 0.25 1</diffuse></material>
+        </visual>
+        <visual name="thr_4_body">
+          <pose>0.32786 -0.32390 0.13183 -1.57080 -0.00000 0.78540</pose>
+          <geometry><mesh><uri>file:///ws/src/robosub_sim/meshes/thruster_lowpoly.stl</uri></mesh></geometry>
+          <material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.25 0.25 0.25 1</diffuse></material>
+        </visual>
+        <visual name="thr_5_body">
+          <pose>-0.08638 0.36144 0.08004 1.57079 1.57079 0.00000</pose>
+          <geometry><mesh><uri>file:///ws/src/robosub_sim/meshes/thruster_lowpoly.stl</uri></mesh></geometry>
+          <material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.25 0.25 0.25 1</diffuse></material>
+        </visual>
+        <visual name="thr_6_body">
+          <pose>0.11062 -0.34732 0.08004 -1.57079 1.57079 0.00000</pose>
+          <geometry><mesh><uri>file:///ws/src/robosub_sim/meshes/thruster_lowpoly.stl</uri></mesh></geometry>
+          <material><ambient>0.15 0.15 0.15 1</ambient><diffuse>0.25 0.25 0.25 1</diffuse></material>
+        </visual>
+
+        <!-- Forward-looking camera: your primary RoboSub sensor. -->
+        <sensor name="front_camera" type="camera">
+          <pose>0.26 0 0 0 0 0</pose>
+          <update_rate>30</update_rate>
+          <topic>sub/camera</topic>
+          <camera>
+            <horizontal_fov>1.4</horizontal_fov>
+            <image><width>640</width><height>480</height></image>
+            <clip><near>0.05</near><far>50</far></clip>
+          </camera>
+        </sensor>
+
+        <!-- IMU: orientation + angular rate, the backbone of AUV state estimation.
+             Noise/bias numbers are in the range of a consumer MEMS IMU
+             (gyro ~0.01 deg/s rms, accel ~1.7 mg rms, small constant bias)
+             so downstream filters are tuned against something realistic
+             rather than a perfect signal. Raw output is gravity-INCLUDED:
+             at rest linear_acceleration.z reads about +9.81. -->
+        <sensor name="imu" type="imu">
+          <update_rate>100</update_rate>
+          <topic>sub/imu</topic>
+          <gz_frame_id>base_link</gz_frame_id>
+          <imu>
+            <angular_velocity>
+              <x><noise type="gaussian"><mean>0</mean><stddev>2e-4</stddev><bias_mean>7.5e-6</bias_mean><bias_stddev>8e-7</bias_stddev></noise></x>
+              <y><noise type="gaussian"><mean>0</mean><stddev>2e-4</stddev><bias_mean>7.5e-6</bias_mean><bias_stddev>8e-7</bias_stddev></noise></y>
+              <z><noise type="gaussian"><mean>0</mean><stddev>2e-4</stddev><bias_mean>7.5e-6</bias_mean><bias_stddev>8e-7</bias_stddev></noise></z>
+            </angular_velocity>
+            <linear_acceleration>
+              <x><noise type="gaussian"><mean>0</mean><stddev>1.7e-2</stddev><bias_mean>0.1</bias_mean><bias_stddev>1e-3</bias_stddev></noise></x>
+              <y><noise type="gaussian"><mean>0</mean><stddev>1.7e-2</stddev><bias_mean>0.1</bias_mean><bias_stddev>1e-3</bias_stddev></noise></y>
+              <z><noise type="gaussian"><mean>0</mean><stddev>1.7e-2</stddev><bias_mean>0.1</bias_mean><bias_stddev>1e-3</bias_stddev></noise></z>
+            </linear_acceleration>
+          </imu>
+        </sensor>
+
+        <!-- DEPTH. Gazebo has no pressure sensor; the altimeter is the
+             closest thing. It reports vertical_position RELATIVE to where
+             the sensor started (vertical_reference = world z at spawn), so
+             the depth_sensor node turns it into metres below the surface.
+             Noise ~1 cm rms, about what a Bar30 gives you. -->
+        <sensor name="altimeter" type="altimeter">
+          <update_rate>50</update_rate>
+          <topic>sub/altimeter</topic>
+          <gz_frame_id>base_link</gz_frame_id>
+          <altimeter>
+            <vertical_position>
+              <noise type="gaussian"><mean>0</mean><stddev>0.01</stddev></noise>
+            </vertical_position>
+            <vertical_velocity>
+              <noise type="gaussian"><mean>0</mean><stddev>0.02</stddev></noise>
+            </vertical_velocity>
+          </altimeter>
+        </sensor>
+      </link>
+
+      <!-- ===== Thrusters =====
+           Each is a spinning propeller link on a revolute joint. The Thruster
+           plugin turns a commanded value into force via a propeller model.
+           Two horizontal (surge + yaw), two vertical (heave + pitch). -->
+
+      <!-- ===== Thrusters (6, vectored X + 2 vertical) =====
+           Numbering matches the hardware: 1/2 rear corners, 3/4 front
+           corners, 5/6 vertical. Pose rpy aims the local Z axis, which is
+           the thrust line. Positions are the propeller DUCT axes measured
+           from the CAD mesh (the URDF joint origins are the mount brackets,
+           5-8 cm inboard of the props, so they are NOT used here). The
+           Thruster plugin applies force at this link's origin. -->
+      <link name="thr_1">
+        <pose>-0.294 0.279 0.033 0 1.5708 -2.35619</pose>
+        <inertial><mass>0.05</mass>
+          <inertia><ixx>1e-4</ixx><iyy>1e-4</iyy><izz>1e-4</izz>
+                   <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz></inertia></inertial>
+        <!-- Only the PROPELLER lives on this link, because the Thruster plugin
+             spins it. Everything is centred on the spin axis (local z), so it
+             rotates in place. The thruster body mesh is on base_link. -->
+        <visual name="prop">
+          <pose>0 0 0.089 0 0 0</pose>
+          <geometry><cylinder><radius>0.045</radius><length>0.008</length></cylinder></geometry>
+          <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="blade">
+          <pose>0 0 0.089 0 0 0</pose>
+          <geometry><box><size>0.09 0.012 0.012</size></box></geometry>
+          <material><ambient>0.8 0.8 0.2 1</ambient><diffuse>0.9 0.9 0.3 1</diffuse></material>
+        </visual>
+      </link>
+      <joint name="thr_1_joint" type="revolute">
+        <parent>base_link</parent><child>thr_1</child>
+        <axis><xyz>0 0 1</xyz><limit><lower>-1e16</lower><upper>1e16</upper></limit></axis>
+      </joint>
+
+      <link name="thr_2">
+        <pose>-0.294 -0.279 0.033 0 1.5708 2.35619</pose>
+        <inertial><mass>0.05</mass>
+          <inertia><ixx>1e-4</ixx><iyy>1e-4</iyy><izz>1e-4</izz>
+                   <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz></inertia></inertial>
+        <!-- Only the PROPELLER lives on this link, because the Thruster plugin
+             spins it. Everything is centred on the spin axis (local z), so it
+             rotates in place. The thruster body mesh is on base_link. -->
+        <visual name="prop">
+          <pose>0 0 0.109 0 0 0</pose>
+          <geometry><cylinder><radius>0.045</radius><length>0.008</length></cylinder></geometry>
+          <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="blade">
+          <pose>0 0 0.109 0 0 0</pose>
+          <geometry><box><size>0.09 0.012 0.012</size></box></geometry>
+          <material><ambient>0.8 0.8 0.2 1</ambient><diffuse>0.9 0.9 0.3 1</diffuse></material>
+        </visual>
+      </link>
+      <joint name="thr_2_joint" type="revolute">
+        <parent>base_link</parent><child>thr_2</child>
+        <axis><xyz>0 0 1</xyz><limit><lower>-1e16</lower><upper>1e16</upper></limit></axis>
+      </joint>
+
+      <link name="thr_3">
+        <pose>0.294 0.279 0.033 0 1.5708 -0.785398</pose>
+        <inertial><mass>0.05</mass>
+          <inertia><ixx>1e-4</ixx><iyy>1e-4</iyy><izz>1e-4</izz>
+                   <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz></inertia></inertial>
+        <!-- Only the PROPELLER lives on this link, because the Thruster plugin
+             spins it. Everything is centred on the spin axis (local z), so it
+             rotates in place. The thruster body mesh is on base_link. -->
+        <visual name="prop">
+          <pose>0 0 0.089 0 0 0</pose>
+          <geometry><cylinder><radius>0.045</radius><length>0.008</length></cylinder></geometry>
+          <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="blade">
+          <pose>0 0 0.089 0 0 0</pose>
+          <geometry><box><size>0.09 0.012 0.012</size></box></geometry>
+          <material><ambient>0.8 0.8 0.2 1</ambient><diffuse>0.9 0.9 0.3 1</diffuse></material>
+        </visual>
+      </link>
+      <joint name="thr_3_joint" type="revolute">
+        <parent>base_link</parent><child>thr_3</child>
+        <axis><xyz>0 0 1</xyz><limit><lower>-1e16</lower><upper>1e16</upper></limit></axis>
+      </joint>
+
+      <link name="thr_4">
+        <pose>0.294 -0.279 0.033 0 1.5708 0.785398</pose>
+        <inertial><mass>0.05</mass>
+          <inertia><ixx>1e-4</ixx><iyy>1e-4</iyy><izz>1e-4</izz>
+                   <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz></inertia></inertial>
+        <!-- Only the PROPELLER lives on this link, because the Thruster plugin
+             spins it. Everything is centred on the spin axis (local z), so it
+             rotates in place. The thruster body mesh is on base_link. -->
+        <visual name="prop">
+          <pose>0 0 0.109 0 0 0</pose>
+          <geometry><cylinder><radius>0.045</radius><length>0.008</length></cylinder></geometry>
+          <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="blade">
+          <pose>0 0 0.109 0 0 0</pose>
+          <geometry><box><size>0.09 0.012 0.012</size></box></geometry>
+          <material><ambient>0.8 0.8 0.2 1</ambient><diffuse>0.9 0.9 0.3 1</diffuse></material>
+        </visual>
+      </link>
+      <joint name="thr_4_joint" type="revolute">
+        <parent>base_link</parent><child>thr_4</child>
+        <axis><xyz>0 0 1</xyz><limit><lower>-1e16</lower><upper>1e16</upper></limit></axis>
+      </joint>
+
+      <link name="thr_5">
+        <pose>0.012 0.294 0.067 0 0 0</pose>
+        <inertial><mass>0.05</mass>
+          <inertia><ixx>1e-4</ixx><iyy>1e-4</iyy><izz>1e-4</izz>
+                   <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz></inertia></inertial>
+        <!-- Only the PROPELLER lives on this link, because the Thruster plugin
+             spins it. Everything is centred on the spin axis (local z), so it
+             rotates in place. The thruster body mesh is on base_link. -->
+        <visual name="prop">
+          <pose>0 0 -0.096 0 0 0</pose>
+          <geometry><cylinder><radius>0.045</radius><length>0.008</length></cylinder></geometry>
+          <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="blade">
+          <pose>0 0 -0.096 0 0 0</pose>
+          <geometry><box><size>0.09 0.012 0.012</size></box></geometry>
+          <material><ambient>0.8 0.8 0.2 1</ambient><diffuse>0.9 0.9 0.3 1</diffuse></material>
+        </visual>
+      </link>
+      <joint name="thr_5_joint" type="revolute">
+        <parent>base_link</parent><child>thr_5</child>
+        <axis><xyz>0 0 1</xyz><limit><lower>-1e16</lower><upper>1e16</upper></limit></axis>
+      </joint>
+
+      <link name="thr_6">
+        <pose>0.012 -0.294 0.067 0 0 0</pose>
+        <inertial><mass>0.05</mass>
+          <inertia><ixx>1e-4</ixx><iyy>1e-4</iyy><izz>1e-4</izz>
+                   <ixy>0</ixy><ixz>0</ixz><iyz>0</iyz></inertia></inertial>
+        <!-- Only the PROPELLER lives on this link, because the Thruster plugin
+             spins it. Everything is centred on the spin axis (local z), so it
+             rotates in place. The thruster body mesh is on base_link. -->
+        <visual name="prop">
+          <pose>0 0 -0.096 0 0 0</pose>
+          <geometry><cylinder><radius>0.045</radius><length>0.008</length></cylinder></geometry>
+          <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.2 0.2 0.2 1</diffuse></material>
+        </visual>
+        <visual name="blade">
+          <pose>0 0 -0.096 0 0 0</pose>
+          <geometry><box><size>0.09 0.012 0.012</size></box></geometry>
+          <material><ambient>0.8 0.8 0.2 1</ambient><diffuse>0.9 0.9 0.3 1</diffuse></material>
+        </visual>
+      </link>
+      <joint name="thr_6_joint" type="revolute">
+        <parent>base_link</parent><child>thr_6</child>
+        <axis><xyz>0 0 1</xyz><limit><lower>-1e16</lower><upper>1e16</upper></limit></axis>
+      </joint>
+      <!-- HYDRODYNAMICS: added mass + drag (Fossen's equations). Without this
+           the sub coasts forever like it's in space.
+           NOTE: no quadratic ANGULAR terms (kPP/mQQ/nRR). Gazebo integrates
+           hydrodynamics explicitly, and once the hull picks up angular rate
+           those terms diverge -- the sim dies with
+           "ODE INTERNAL ERROR 1: assertion aabbBound >= dMinIntExact".
+           Strong LINEAR angular damping keeps rotation bounded instead. -->
+      <plugin filename="gz-sim-hydrodynamics-system" name="gz::sim::systems::Hydrodynamics">
+        <link_name>base_link</link_name>
+        <!-- added mass: water the hull must accelerate along with itself -->
+        <xDotU>-4.0</xDotU>  <yDotV>-8.0</yDotV>  <zDotW>-8.0</zDotW>
+        <kDotP>-0.1</kDotP>  <mDotQ>-0.3</mDotQ>  <nDotR>-0.3</nDotR>
+        <!-- linear damping -->
+        <xU>-50.0</xU>       <yV>-120.0</yV>      <zW>-120.0</zW>
+        <kP>-15.0</kP>       <mQ>-25.0</mQ>       <nR>-25.0</nR>
+        <!-- quadratic damping, translation only -->
+        <xUU>-10.0</xUU>     <yVV>-40.0</yVV>     <zWW>-40.0</zWW>
+      </plugin>
+
+      <!-- One Thruster plugin per propeller. Command topic is
+           /model/sub/joint/<joint>/cmd_thrust  (std_msgs/Float64, newtons). -->
+      <plugin filename="gz-sim-thruster-system" name="gz::sim::systems::Thruster">
+        <namespace>sub</namespace><joint_name>thr_1_joint</joint_name>
+        <thrust_coefficient>0.004422</thrust_coefficient>
+        <fluid_density>1000</fluid_density>
+        <propeller_diameter>0.2</propeller_diameter>
+        <velocity_control>true</velocity_control>
+      </plugin>
+      <plugin filename="gz-sim-thruster-system" name="gz::sim::systems::Thruster">
+        <namespace>sub</namespace><joint_name>thr_2_joint</joint_name>
+        <thrust_coefficient>0.004422</thrust_coefficient>
+        <fluid_density>1000</fluid_density>
+        <propeller_diameter>0.2</propeller_diameter>
+        <velocity_control>true</velocity_control>
+      </plugin>
+      <plugin filename="gz-sim-thruster-system" name="gz::sim::systems::Thruster">
+        <namespace>sub</namespace><joint_name>thr_3_joint</joint_name>
+        <thrust_coefficient>0.004422</thrust_coefficient>
+        <fluid_density>1000</fluid_density>
+        <propeller_diameter>0.2</propeller_diameter>
+        <velocity_control>true</velocity_control>
+      </plugin>
+      <plugin filename="gz-sim-thruster-system" name="gz::sim::systems::Thruster">
+        <namespace>sub</namespace><joint_name>thr_4_joint</joint_name>
+        <thrust_coefficient>0.004422</thrust_coefficient>
+        <fluid_density>1000</fluid_density>
+        <propeller_diameter>0.2</propeller_diameter>
+        <velocity_control>true</velocity_control>
+      </plugin>
+      <plugin filename="gz-sim-thruster-system" name="gz::sim::systems::Thruster">
+        <namespace>sub</namespace><joint_name>thr_5_joint</joint_name>
+        <thrust_coefficient>0.004422</thrust_coefficient>
+        <fluid_density>1000</fluid_density>
+        <propeller_diameter>0.2</propeller_diameter>
+        <velocity_control>true</velocity_control>
+      </plugin>
+      <plugin filename="gz-sim-thruster-system" name="gz::sim::systems::Thruster">
+        <namespace>sub</namespace><joint_name>thr_6_joint</joint_name>
+        <thrust_coefficient>0.004422</thrust_coefficient>
+        <fluid_density>1000</fluid_density>
+        <propeller_diameter>0.2</propeller_diameter>
+        <velocity_control>true</velocity_control>
+      </plugin>
+
+      <!-- Publishes ground-truth pose so you can score your navigation. -->
+      <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
+        <odom_frame>world</odom_frame>
+        <robot_base_frame>base_link</robot_base_frame>
+        <dimensions>3</dimensions>
+      </plugin>
+    </model>
+
+    <!-- An orange competition-style gate to navigate through. -->
+    <model name="gate">
+      <static>true</static>
+      <pose>6 0 -3 0 0 0</pose>
+      <link name="link">
+        <visual name="left"><pose>0 1.0 0 0 0 0</pose>
+          <geometry><box><size>0.08 0.08 2.0</size></box></geometry>
+          <material><ambient>1 0.3 0 1</ambient><diffuse>1 0.35 0 1</diffuse></material></visual>
+        <visual name="right"><pose>0 -1.0 0 0 0 0</pose>
+          <geometry><box><size>0.08 0.08 2.0</size></box></geometry>
+          <material><ambient>1 0.3 0 1</ambient><diffuse>1 0.35 0 1</diffuse></material></visual>
+        <visual name="top"><pose>0 0 1.0 0 0 0</pose>
+          <geometry><box><size>0.08 2.0 0.08</size></box></geometry>
+          <material><ambient>1 0.3 0 1</ambient><diffuse>1 0.35 0 1</diffuse></material></visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>
