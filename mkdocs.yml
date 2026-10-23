@@ -30,6 +30,7 @@ nav:
 
   - Software:
       - Setup: software/setup.md
+      - Underwater vision: software/vision.md
 
   - Mechanical:
       - Solidworks Setup:

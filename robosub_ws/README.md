@@ -1,5 +1,8 @@
 # robosub_ws — AUV simulation environment
 
+For the separate ZED 2i perception launch and calibration workflow, see
+[underwater vision](../docs/software/vision.md).
+
 ROS 2 **Humble** + Gazebo **Harmonic**, in a container, so simulation code and
 Jetson code are the same code.
 
