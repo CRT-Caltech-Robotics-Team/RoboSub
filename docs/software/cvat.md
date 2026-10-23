@@ -106,8 +106,9 @@ for validation and testing; a random frame split can greatly overstate quality.
 ### Create the project and jobs
 
 1. Choose a CVAT instance and give students access. Record its URL, version,
-   storage location, and owner. Hosting and accounts must be arranged before
-   the labeling round; this repository does not provision a CVAT server.
+   storage location, and owner. For a team Linux server, use our
+   [Docker setup](https://github.com/CaltechRoboticsTeam/RoboSub/tree/Zed-2i-Calib/deploy/cvat).
+   Arrange hosting and accounts before the labeling round.
 2. Create one project for the agreed label schema. Match class names exactly
    to `targets[].detector_class` in the vision configuration. Do not create
    different classes for each view or lighting condition.
